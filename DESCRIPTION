@@ -1,0 +1,19 @@
+Package: shinyga
+Type: Package
+Title: Easier Google Analytics Dashboards in Shiny
+Version: 0.0.0.9000
+Date: 2015-03-07
+Author: person("Mark", "Edmondson", email = "shinyga@markedmondson.me", role = c("aut", cre))
+Maintainer: Mark Edmondson <shinyga@markedmondson.me>
+Description: This package adds functions to be used within a Shiny project, that quickstart
+    importing and displaying Google Analytics data.
+License: MIT
+Imports:
+    httr (>= 0.6.1),
+    RCurl,
+    RJSONIO,
+    shiny (>= 0.11.1),
+    shinydashboard (>= 0.2.2), 
+    stringr (>= 0.6.2)
+    
+    
