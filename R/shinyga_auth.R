@@ -218,7 +218,7 @@ shinygaGetToken <- function(code,
                               grant_type = 'authorization_code',
                               style = 'POST')
   
-  token.data <- fromJSON(raw.data);
+  token.data <- RJSONIO::fromJSON(raw.data);
   now <- as.numeric(Sys.time());
   token <- c(token.data, timestamp = c('first'=now, 'refresh'=now));
   
