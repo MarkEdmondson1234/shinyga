@@ -1,7 +1,7 @@
 Package: shinyga
 Type: Package
 Title: Easier Google Analytics Dashboards in Shiny
-Version: 0.0.0.9002
+Version: 0.0.0.9003
 Date: 2015-03-07
 Author: person("Mark", "Edmondson", email = "shinyga@markedmondson.me", role = c("aut", cre))
 Maintainer: Mark Edmondson <shinyga@markedmondson.me>

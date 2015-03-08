@@ -255,7 +255,7 @@ shinygaGetToken <- function(code,
 #' CLIENT_ID <- "xxxxxxxxxxxx.apps.googleusercontent.com"
 #' CLIENT_SECRET <- "xxxxxxxxxxxxxxx"
 #' CLIENT_URL <- 'https://mark.shinyapps.io/ga-effect/'
-#' CLIENT_URL <- 'http://127.0.0.1:6423' #comment out for local testing
+#' # CLIENT_URL <- 'http://127.0.0.1:6423' #comment in for local testing
 #' 
 #' shinyServer(function(input, output, session)){
 #'   
@@ -265,10 +265,10 @@ shinygaGetToken <- function(code,
 #'                             output,
 #'                             session,
 #'                             securityCode,
-#'                             CLIENT_ID,
-#'                             CLIENT_SECRET,
-#'                             CLIENT_URL,
-#'                             messageData)
+#'                             client.id = CLIENT_ID,
+#'                             client.secret = CLIENT_SECRET,
+#'                             client.url = CLIENT_URL,
+#'                             messageData = messageData)
 #'   }
 #' }
 renderAuthenticationMacro <- function(input,

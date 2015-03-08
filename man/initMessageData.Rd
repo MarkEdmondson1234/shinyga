@@ -15,13 +15,16 @@ initMessageData(text = c("Welcome! Authenticate to get started."),
 \item{status}{Color of message. See Details.}
 }
 \value{
-A messageData object to be passed to addMessageData.
+Creates output$messageMenu, and a messageData object to be passed to
+  addMessageData.
 }
 \description{
 Use this first before addMessageData adds to the notification menu when stuff happens
 }
 \examples{
 \dontrun{
+
+## server.r
 shinyServer(function(input, output, session) {
 
     messageData <- initMessageData()
@@ -29,6 +32,11 @@ shinyServer(function(input, output, session) {
     addMessageData(messageData, "A new message!")
 
 }
+
+## ui.r
+
+dashboardHeader(title = "GA Forecast",
+                dropdownMenuOutput("messageMenu"))
 }
 }
 \seealso{
