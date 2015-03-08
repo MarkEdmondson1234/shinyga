@@ -4,7 +4,6 @@
 #' @seealso
 #' \url{http://rstudio.github.io/shinydashboard/appearance.html#icons}
 #' 
-#' @param output A Shiny output object.
 #' @param text Text of message.
 #' @param icon Icon taken from shinydashboard. 
 #' @param status Color of message. See Details.

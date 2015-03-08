@@ -4,12 +4,10 @@
 \alias{initMessageData}
 \title{initMessageData - creates Message object}
 \usage{
-initMessageData(output, text = c("Welcome! Authenticate to get started."),
+initMessageData(text = c("Welcome! Authenticate to get started."),
   icon = c("smile-o"), status = c("info"))
 }
 \arguments{
-\item{output}{A Shiny output object.}
-
 \item{text}{Text of message.}
 
 \item{icon}{Icon taken from shinydashboard.}
@@ -17,8 +15,7 @@ initMessageData(output, text = c("Welcome! Authenticate to get started."),
 \item{status}{Color of message. See Details.}
 }
 \value{
-Creates output$messageMenu, and a messageData object to be passed to
-  addMessageData.
+messageData Object to be passed to addMessageData().
 }
 \description{
 Use this first before addMessageData adds to the notification menu when stuff happens
@@ -29,7 +26,7 @@ Use this first before addMessageData adds to the notification menu when stuff ha
 ## server.r
 shinyServer(function(input, output, session) {
 
-    messageData <- initMessageData(output)
+    messageData <- initMessageData()
 
     addMessageData(messageData, "A new message!")
 
