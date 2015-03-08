@@ -185,7 +185,7 @@ shinygaGetSegments = function(token, start=1, max=1000) {
 #'}
 processManagementData = function(url, keep) {
   
-  ga.json <- RJSONIO::fromJSON(getURL(url));
+  ga.json <- RJSONIO::fromJSON(RCurl::getURL(url));
   
   if (is.null(ga.json)) { stop('data fetching did not output correct format'); }
   #     if (!is.null(ga.json$error$message)) {stop('Error fetching GA Data: ',
