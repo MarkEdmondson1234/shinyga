@@ -50,6 +50,7 @@ shinyServer(function(input, output, session)){
 }
 \seealso{
 Other authentication functions: \code{\link{createCode}};
+  \code{\link{renderAuthenticationMacro}};
   \code{\link{shinygaGetTokenURL}};
   \code{\link{shinygaGetToken}}
 }
