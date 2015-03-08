@@ -33,6 +33,10 @@ initMessageData  <- function(output,
                              icon = c('smile-o'),
                              status = c('info')){
   
+  messageData <- reactiveValues(text=text,
+                                icon=icon,
+                                status=status)
+  
   output$messageMenu <- renderDropdownMenu({
     message_df <- data.frame(text = messageData$text,
                              icon = messageData$icon,
@@ -46,13 +50,13 @@ initMessageData  <- function(output,
                   })
     
     dropdownMenu(type="notifications", .list = msgs)
-  })
-  
-  reactiveValues(text=text,
-                 icon=icon,
-                 status=status)
-  
-} 
+    
+    messageData
+    
+  })  
+}
+
+
 #' addMessageData - creates another Message object
 #' 
 #' Use this after initMessageData to add a message when stuff happens
