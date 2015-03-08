@@ -26,7 +26,7 @@ Uses the same client.id and client.secret as ShinyGetTokenURL
 }
 \examples{
 \dontrun{
-securityCode <- paste0(sample(c(1:9, LETTERS, letters), 20, replace = T), collapse='')
+securityCode <- createCode()
 shinyServer(function(input, output, session)){
 
   AuthCode <- reactive({
@@ -57,6 +57,7 @@ shinyServer(function(input, output, session)){
 }
 \seealso{
 Other authentication functions: \code{\link{authReturnCode}};
+  \code{\link{createCode}};
   \code{\link{shinygaGetTokenURL}}
 }
 

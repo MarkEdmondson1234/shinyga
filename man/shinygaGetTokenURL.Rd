@@ -24,7 +24,7 @@ Returns the authentication URL
 }
 \examples{
 \dontrun{
-securityCode <- paste0(sample(c(1:9, LETTERS, letters), 20, replace = T), collapse='')
+securityCode <- createCode()
 shinyServer(function(input, output, session)){
 
   AuthCode <- reactive({
@@ -55,6 +55,6 @@ shinyServer(function(input, output, session)){
 }
 \seealso{
 Other authentication functions: \code{\link{authReturnCode}};
-  \code{\link{shinygaGetToken}}
+  \code{\link{createCode}}; \code{\link{shinygaGetToken}}
 }
 
