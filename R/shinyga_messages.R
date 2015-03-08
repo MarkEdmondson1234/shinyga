@@ -8,8 +8,7 @@
 #' @param text Text of message.
 #' @param icon Icon taken from shinydashboard. 
 #' @param status Color of message. See Details.
-#' @return Creates output$messageMenu, and a messageData object to be passed to
-#'   addMessageData.
+#' @return messageData Object to be passed to addMessageData().
 #' @family message functions
 #' @examples
 #' \dontrun{
@@ -17,7 +16,7 @@
 #' ## server.r
 #' shinyServer(function(input, output, session) {
 #' 
-#'     messageData <- initMessageData(output)
+#'     messageData <- initMessageData()
 #' 
 #'     addMessageData(messageData, "A new message!")
 #'     
@@ -28,32 +27,13 @@
 #' dashboardHeader(title = "GA Forecast",
 #'                 dropdownMenuOutput("messageMenu"))
 #' }
-initMessageData  <- function(output,
-                             text = c('Welcome! Authenticate to get started.'),
+initMessageData  <- function(text = c('Welcome! Authenticate to get started.'),
                              icon = c('smile-o'),
                              status = c('info')){
   
-  messageData <- reactiveValues(text=text,
-                                icon=icon,
-                                status=status)
-  
-  output$messageMenu <- renderDropdownMenu({
-    message_df <- data.frame(text = messageData$text,
-                             icon = messageData$icon,
-                             status = messageData$status)
-    msgs <- apply(message_df, 
-                  1, 
-                  function(row){
-                    notificationItem(text = row[['text']], 
-                                     icon = icon(row[['icon']]), 
-                                     status = row[['status']])
-                  })
-    
-    dropdownMenu(type="notifications", .list = msgs)
-    
-    messageData
-    
-  })  
+  reactiveValues(text=text,
+                 icon=icon,
+                 status=status)   
 }
 
 
