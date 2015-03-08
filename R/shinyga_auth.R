@@ -6,15 +6,15 @@
 # CLIENT_URL     <-  'http://127.0.0.1:6423'
 
 ### Authentication functions
-#' Returns the authentication parameter "code" in redirected URLs
+#' Creates a random character code
 #' 
-#' @param session A session object within a shinyServer function.
-#' @param securityCode A randomly generate security code passed previously in shinygaGetTokenURL.
-#' @return The authentication code from the redirect URL parameter.
+#' @param seed The seed for random code.
+#' @param num Number of characters in code.
+#' @return A random string of digits and characters.
 #' @family authentication functions
 #' @examples
 #' \dontrun{
-#' securityCode <- paste0(sample(c(1:9, LETTERS, letters), 20, replace = T), collapse='')
+#' securityCode <- createCode()
 #' shinyServer(function(input, output, session)){
 #'   
 #'   AuthCode <- reactive({
@@ -26,7 +26,7 @@
 #'   output$AuthGAURL <- renderUI({
 #'  
 #'        a("Click Here to Authorise Your Google Analytics Access", 
-#'           href=ShinyGetTokenURL(securityCode)
+#'           href=shinygaGetTokenURL(securityCode)
 #'           )
 #'        })
 #'    
@@ -35,7 +35,49 @@
 #'         need(AuthCode(), "Authenticate To See")
 #'       )
 #'     
-#'       access_token <- ShinyGetToken(code = AuthCode())
+#'       access_token <- shinygaGetToken(code = AuthCode())
+#'       
+#'       token <- access_token$access_token
+#'       
+#'     })
+#' }
+#' }
+createCode <- function(seed=NULL, num=20){
+  set.seed(seed)
+  
+  paste0(sample(c(1:9, LETTERS, letters), num, replace = T), collapse='')
+} 
+
+#' Returns the authentication parameter "code" in redirected URLs
+#' 
+#' @param session A session object within a shinyServer function.
+#' @param securityCode A randomly generate security code passed previously in shinygaGetTokenURL.
+#' @return The authentication code from the redirect URL parameter.
+#' @family authentication functions
+#' @examples
+#' \dontrun{
+#' securityCode <- createCode()
+#' shinyServer(function(input, output, session)){
+#'   
+#'   AuthCode <- reactive({
+#'   
+#'       authReturnCode(session, securityCode)
+#'   
+#'   })
+#' 
+#'   output$AuthGAURL <- renderUI({
+#'  
+#'        a("Click Here to Authorise Your Google Analytics Access", 
+#'           href=shinygaGetTokenURL(securityCode)
+#'           )
+#'        })
+#'    
+#'   AccessToken <- reactive({
+#'       validate(
+#'         need(AuthCode(), "Authenticate To See")
+#'       )
+#'     
+#'       access_token <- shinygaGetToken(code = AuthCode())
 #'       
 #'       token <- access_token$access_token
 #'       
@@ -72,7 +114,7 @@ authReturnCode <- function(session, securityCode){
 #' @family authentication functions
 #' @examples
 #' \dontrun{
-#' securityCode <- paste0(sample(c(1:9, LETTERS, letters), 20, replace = T), collapse='')
+#' securityCode <- createCode()
 #' shinyServer(function(input, output, session)){
 #'   
 #'   AuthCode <- reactive({
@@ -133,7 +175,7 @@ shinygaGetTokenURL <- function(state,
 #' @family authentication functions
 #' @examples
 #' \dontrun{
-#' securityCode <- paste0(sample(c(1:9, LETTERS, letters), 20, replace = T), collapse='')
+#' securityCode <- createCode()
 #' shinyServer(function(input, output, session)){
 #'   
 #'   AuthCode <- reactive({
@@ -167,14 +209,14 @@ shinygaGetToken <- function(code,
                             redirect.uri  = CLIENT_URL){
   
   opts <- list(verbose = FALSE);
-  raw.data <- postForm('https://accounts.google.com/o/oauth2/token',
-                       .opts = opts,
-                       code = code,
-                       client_id = client.id,
-                       client_secret = client.secret,
-                       redirect_uri = redirect.uri,
-                       grant_type = 'authorization_code',
-                       style = 'POST');
+  raw.data <- RCurl::postForm('https://accounts.google.com/o/oauth2/token',
+                              .opts = opts,
+                              code = code,
+                              client_id = client.id,
+                              client_secret = client.secret,
+                              redirect_uri = redirect.uri,
+                              grant_type = 'authorization_code',
+                              style = 'POST')
   
   token.data <- fromJSON(raw.data);
   now <- as.numeric(Sys.time());
