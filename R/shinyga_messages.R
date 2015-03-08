@@ -4,6 +4,7 @@
 #' @seealso
 #' \url{http://rstudio.github.io/shinydashboard/appearance.html#icons}
 #' 
+#' @param output A Shiny output object.
 #' @param text Text of message.
 #' @param icon Icon taken from shinydashboard. 
 #' @param status Color of message. See Details.
@@ -16,7 +17,7 @@
 #' ## server.r
 #' shinyServer(function(input, output, session) {
 #' 
-#'     messageData <- initMessageData()
+#'     messageData <- initMessageData(output)
 #' 
 #'     addMessageData(messageData, "A new message!")
 #'     
@@ -27,7 +28,8 @@
 #' dashboardHeader(title = "GA Forecast",
 #'                 dropdownMenuOutput("messageMenu"))
 #' }
-initMessageData  <- function(text = c('Welcome! Authenticate to get started.'),
+initMessageData  <- function(output,
+                             text = c('Welcome! Authenticate to get started.'),
                              icon = c('smile-o'),
                              status = c('info')){
   
