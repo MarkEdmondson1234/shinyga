@@ -11,6 +11,7 @@ importing and displaying Google Analytics data.
 }
 \section{Authentication functions}{
 
+\code{\link{renderAuthenticationMacro}}
 \code{\link{renderAuthDropdownRow}}
 }
 

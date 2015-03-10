@@ -297,7 +297,7 @@ rollupGA <- function(GAProfileTable,
   Results <- data.frame()
   
   ## Adding check of columns
-  expected.columns <- unlist(str_split(gsub("ga:",
+  expected.columns <- unlist(stringr::str_split(gsub("ga:",
                                             "",
                                             paste(dimensions, metrics, sep=",")),
                                        pattern=","))
