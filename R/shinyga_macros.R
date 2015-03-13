@@ -304,15 +304,6 @@ doAuthMacro <- function(input,
     
     AccountProfiles <- getAndMergeGAAccounts(AccessToken())
     
-    if(!is.na(AccountProfiles$name[1])){
-      addMessageData(messageData,
-                     addText=paste("Authenticated"),
-                     addIcon='check-square',
-                     addStatus='success')
-    }
-    
-    AccountProfiles
-    
   })
   
   
