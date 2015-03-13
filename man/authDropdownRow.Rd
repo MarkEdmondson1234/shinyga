@@ -41,6 +41,10 @@ shinyServer(function(input, output, session) {
  }
 }
 \seealso{
-Other shiny macro functions: \code{\link{renderAuthDropdownRow}}
+Shortcut using \code{\link{doAuthMacro}}.
+
+Other shiny macro functions: \code{\link{doSegmentMacro}};
+  \code{\link{metricSelect}};
+  \code{\link{renderAuthDropdownRow}}
 }
 

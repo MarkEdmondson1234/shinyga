@@ -11,6 +11,7 @@
 #' @param seed The seed for random code.
 #' @param num Number of characters in code.
 #' @return A random string of digits and characters.
+#' @seealso Shortcut using \code{\link{doAuthMacro}}.
 #' @family authentication functions
 #' @examples
 #' \dontrun{
@@ -53,6 +54,7 @@ createCode <- function(seed=NULL, num=20){
 #' @param session A session object within a shinyServer function.
 #' @param securityCode A randomly generate security code passed previously in shinygaGetTokenURL.
 #' @return The authentication code from the redirect URL parameter.
+#' @seealso Shortcut using \code{\link{doAuthMacro}}.
 #' @family authentication functions
 #' @examples
 #' \dontrun{
@@ -111,6 +113,7 @@ authReturnCode <- function(session, securityCode){
 #' @param client.secret The client secret taken from the Google API Console.
 #' @param redirect.uri The URL of where your Shiny application sits, that will read state parameter.
 #' @return The URL a user should click on to start authentication.
+#' @seealso Shortcut using \code{\link{doAuthMacro}}.
 #' @family authentication functions
 #' @examples
 #' \dontrun{
@@ -172,6 +175,7 @@ shinygaGetTokenURL <- function(state,
 #' @param client.secret The client secret taken from the Google API Console.
 #' @param redirect.uri The URL of where your Shiny application sits, that will read state parameter.
 #' @return The token from Google that authenticates future API calls.
+#' @seealso Shortcut using \code{\link{doAuthMacro}}.
 #' @family authentication functions
 #' @examples
 #' \dontrun{
@@ -224,3 +228,4 @@ shinygaGetToken <- function(code,
   
   return(token)
 }
+

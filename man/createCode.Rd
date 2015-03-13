@@ -49,7 +49,10 @@ shinyServer(function(input, output, session)){
 }
 }
 \seealso{
+Shortcut using \code{\link{doAuthMacro}}.
+
 Other authentication functions: \code{\link{authReturnCode}};
+  \code{\link{doAuthMacro}};
   \code{\link{shinygaGetTokenURL}};
   \code{\link{shinygaGetToken}}
 }

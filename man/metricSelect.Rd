@@ -24,4 +24,9 @@ Creates a select box with GA metrics. Metric var then available in input$<inputI
                metricSelect())
          }
 }
+\seealso{
+Other shiny macro functions: \code{\link{authDropdownRow}};
+  \code{\link{doSegmentMacro}};
+  \code{\link{renderAuthDropdownRow}}
+}
 

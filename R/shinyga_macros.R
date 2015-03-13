@@ -7,6 +7,7 @@
 #' @param account.id The shiny id for accounts. Then available at input$<account.id>.
 #' @param web.prop.id The shiny id for web properties. Then available at input$<web.prop.id>.
 #' @param view.id The shiny id for views. Then available at input$<view.id>.
+#' @seealso Shortcut using \code{\link{doAuthMacro}}.
 #' @return A shinydashboard function that generates necessary HTML.
 #' @family shiny macro functions
 #' @examples
@@ -61,6 +62,7 @@ authDropdownRow <- function(account.id  = "accounts",
 #' @param web.prop.id The shiny id for web properties. Then available at input$<web.prop.id>.
 #' @param view.id The shiny id for views. Then available at input$<view.id>.
 #' @return Nothing.
+#' @seealso Shortcut using \code{\link{doAuthMacro}}.
 #' @family shiny macro functions
 #' @examples
 #' 
@@ -153,7 +155,7 @@ renderAuthDropdownRow <- function(ga.table,
 #' Creates a select box with GA metrics. Metric var then available in input$<inputId>
 #' 
 #' @param inputId The id of the input.  Then available in input$<inputId>.
-#' @family shiny macro functions.
+#' @family shiny macro functions
 #' @return A shinydashboard function that generates necessary HTML.
 #' @examples
 #' \dontrun{
@@ -196,4 +198,226 @@ metricSelect  <- function(inputId="metric_choice"){
                           "Unique Events" = "uniqueEvents",
                           "Event Value" = "eventValue")
   )
+}
+
+#' Quick setup of shinyGA authentication
+#' 
+#' This function calls all the other authentication functions so you can quick start.
+#' Sacrifices customisation for speed.
+#' 
+#' @param input Shiny input object.
+#' @param output Shiny output object.
+#' @param session Shiny session object.
+#' @param securityCode A unique session code, such as from createCode()
+#' @param client.id The client ID taken from the Google API Console.
+#' @param client.secret The client secret taken from the Google API Console.
+#' @param client.uri The URL of where your Shiny application sits, that will read state parameter.
+#' @return
+#' A named list. See example for uses in shinyServer().
+#' \describe{
+#'   \item{token}{Google Authentication Token needed for API calls.}
+#'   \item{table}{Table of Google Analytics Profiles needed for \code{\link{rollupGA}}.}
+#' }
+#' 
+#' The function will also create the outputs for the authentication menu.
+#' These are per the defaults of \code{\link{renderAuthDropdownRow}}
+#' 
+#' Also outputs a DataTable called 'output$GAProfile' for use in ui.r as renderDataTable('GAProfile')
+#' 
+#' @seealso
+#' 
+#' Authentication macros \code{\link{renderAuthDropdownRow}} and \code{\link{authDropdownRow}}
+#'   
+#' @family authentication functions
+#' @examples
+#' \dontrun{
+#' 
+#' ## client info taken from Google API console.
+#' CLIENT_ID      <-  "xxxxx.apps.googleusercontent.com"
+#' CLIENT_SECRET  <-  "xxxxxxxxxxxx"
+#' CLIENT_URL     <-  'https://mark.shinyapps.io/ga-effect/'
+#' ## comment out for deployment, in for local testing via runApp(port=6423)
+#' CLIENT_URL     <-  'http://127.0.0.1:6423' 
+#' 
+#' securityCode <- createCode()
+#' 
+#' shinyServer(function(input, output, session)){
+#'   
+#'   ## returns list of token and profile.table
+#'   auth <- doAuthMacro(input, output, session,
+#'                       securityCode,
+#'                       client.id     = CLIENT_ID,
+#'                       client.secret = CLIENT_SECRET, 
+#'                       client.uri    = CLIENT_URL)
+#'                       
+#'   ga.token         <- auth$token
+#'   profile.table    <- auth$table
+#'  
+#'   ## call the token for API calls
+#'  
+#'   data <- rollupGA(GAProfileTable = profile.table(),
+#'                    dimensions     = 'ga:date',
+#'                    start_date     = '2014-03-13',
+#'                    end_date       = '2015-03-13'
+#'                    metrics        = 'ga:sessions',
+#'                    ga             = ga.token())
+#'   }
+#' }
+doAuthMacro <- function(input,
+                        output, 
+                        session, 
+                        securityCode,
+                        client.id,
+                        client.secret,
+                        client.uri){
+  
+  
+  
+  AuthCode <- reactive({
+    authReturnCode(session, securityCode)
+  })
+  
+  output$AuthGAURL <- renderUI({
+    a("Click Here to Authorise Your Google Analytics Access", 
+      href=shinygaGetTokenURL(securityCode,
+                              client.id=client.id,
+                              client.secret=client.secret,
+                              redirect.uri=client.uri))
+  })
+  
+  AccessToken <- reactive({
+    validate(
+      need(AuthCode(), "Authenticate To See")
+    )
+    access_token <- shinygaGetToken(code = AuthCode(),
+                                    client.id=client.id,
+                                    client.secret=client.secret,
+                                    redirect.uri=client.uri)
+    token <- access_token$access_token
+  })
+  
+  
+  GAProfileTable <- reactive({
+    validate(
+      need(AccessToken(), "Authentication working...")
+    )
+    
+    AccountProfiles <- getAndMergeGAAccounts(AccessToken())
+    
+    if(!is.na(AccountProfiles$name[1])){
+      addMessageData(messageData,
+                     addText=paste("Authenticated"),
+                     addIcon='check-square',
+                     addStatus='success')
+    }
+    
+    AccountProfiles
+    
+  })
+  
+  
+  output$GAProfile <- renderDataTable({
+    
+    ga <- GAProfileTable()[,c('name',
+                              'webPropertyId',
+                              'websiteUrl',
+                              'profilename', 
+                              'id')]
+    
+    names(ga) <- c('account', 
+                   'web property id',
+                   'website url',
+                   'view', 
+                   'view id')
+    
+    ga
+    
+  })
+  
+  return(list(table    = GAProfileTable,
+              token    = AccessToken))
+  
+}
+
+#' Quick setup of shinyga segments
+#' 
+#' This function creates the menu and fetches the GA segments.
+#' 
+#' @param input Shiny input object.
+#' @param output Shiny output object.
+#' @param session Shiny session object.
+#' @param token GA token.
+
+#' @return
+#' A segment table
+#' 
+#' A DataTable called from ui.r by renderDataTable('SegmentTable')
+#' 
+#' A selectInput('menuSeg') called from ui.r by uiOutput("controlSeg") and input$menuSeg
+#'   
+#' @family shiny macro functions
+#' @examples
+#' \dontrun{
+#' 
+#' ## client info taken from Google API console.
+#' CLIENT_ID      <-  "xxxxx.apps.googleusercontent.com"
+#' CLIENT_SECRET  <-  "xxxxxxxxxxxx"
+#' CLIENT_URL     <-  'https://mark.shinyapps.io/ga-effect/'
+#' ## comment out for deployment, in for local testing via runApp(port=6423)
+#' CLIENT_URL     <-  'http://127.0.0.1:6423' 
+#' 
+#' securityCode <- createCode()
+#' 
+#' shinyServer(function(input, output, session)){
+#'   
+#'   ## returns list of token and profile.table
+#'   auth <- doAuthMacro(input, output, session,
+#'                       securityCode,
+#'                       client.id     = CLIENT_ID,
+#'                       client.secret = CLIENT_SECRET, 
+#'                       client.uri    = CLIENT_URL)
+#'                       
+#'   ga.token         <- auth$token
+#'   profile.table    <- auth$table
+#'   
+#'   segments <- doSegmentMacro(input, output, session,
+#'                              token=ga.token())
+#'  
+#'   }
+#' }
+doSegmentMacro <- function(input, output, session, token){
+  
+  output$controlSeg <- renderUI({
+    
+    pList <- ShinyMakeGASegmentTable()[,c('name',
+                                          'segmentId',
+                                          'definition',
+                                          'id')]
+    choice        <- pList$segmentId
+    choice.names  <- pList$name
+    names(choice) <- choice.names
+    
+    selectInput("menuSeg",
+                "Your Segments",
+                choices = choice,
+                width = "100%")
+  })
+  
+  output$SegmentTable <- renderDataTable({
+    
+    ShinyMakeGASegmentTable()[,c('name', 'definition')]
+    
+  })
+  
+  ShinyMakeGASegmentTable <- reactive({
+    #get all the management API stuff
+    Segments            <- shinygaGetSegments(token)
+    Segments$name       <- as.character(Segments$name)
+    Segments$segmentId  <- as.character(Segments$segmentId)
+    Segments$definition <- as.character(Segments$definition)
+    Segments$id         <- as.character(Segments$id)
+    
+    Segments
+    
+  })
 }
