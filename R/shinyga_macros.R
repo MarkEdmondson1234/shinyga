@@ -325,9 +325,9 @@ doAuthMacro <- function(input,
     
   })
   
-  renderAuthDropdownRow <- function(GAProfileTable,
-                                    input,
-                                    session)
+  renderAuthDropdownRow(GAProfileTable(),
+                        input,
+                        session)
   
   return(list(table    = GAProfileTable,
               token    = AccessToken))
