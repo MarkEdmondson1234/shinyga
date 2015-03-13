@@ -19,6 +19,23 @@
 #' 
 #'     addMessageData(messageData, "A new message!")
 #'     
+#'       output$messageMenu <- renderDropdownMenu({
+#'       
+#'       message_df <- data.frame(text = messageData$text,
+#'                                icon = messageData$icon,
+#'                                status = messageData$status)
+#'                                
+#'      msgs <- apply(message_df, 1, function(row){
+#'                    notificationItem(text = row[['text']], 
+#'                                     icon = icon(row[['icon']]), 
+#'                                     status = row[['status']])
+#'                                     
+#'                    })
+#'      
+#'      dropdownMenu(type="notifications", .list = msgs)
+#'      
+#'      })
+#'     
 #' }
 #' 
 #' ## ui.r
@@ -30,9 +47,9 @@ initMessageData  <- function(text = c('Welcome! Authenticate to get started.'),
                              icon = c('smile-o'),
                              status = c('info')){
   
-  reactiveValues(text=text,
-                 icon=icon,
-                 status=status)   
+  rv <- reactiveValues(text=text,
+                       icon=icon,
+                       status=status)
 }
 
 
@@ -51,13 +68,37 @@ initMessageData  <- function(text = c('Welcome! Authenticate to get started.'),
 #' @family message functions
 #' @examples
 #' \dontrun{
+#' 
+#' ## server.r
 #' shinyServer(function(input, output, session) {
 #' 
 #'     messageData <- initMessageData()
 #' 
 #'     addMessageData(messageData, "A new message!")
 #'     
+#'       output$messageMenu <- renderDropdownMenu({
+#'       
+#'       message_df <- data.frame(text = messageData$text,
+#'                                icon = messageData$icon,
+#'                                status = messageData$status)
+#'                                
+#'      msgs <- apply(message_df, 1, function(row){
+#'                    notificationItem(text = row[['text']], 
+#'                                     icon = icon(row[['icon']]), 
+#'                                     status = row[['status']])
+#'                                     
+#'                    })
+#'      
+#'      dropdownMenu(type="notifications", .list = msgs)
+#'      
+#'      })
+#'     
 #' }
+#' 
+#' ## ui.r
+#' 
+#' dashboardHeader(title = "GA Forecast",
+#'                 dropdownMenuOutput("messageMenu"))
 #' }
 addMessageData <- function(messageData,
                            addText,

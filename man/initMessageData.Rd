@@ -30,6 +30,23 @@ shinyServer(function(input, output, session) {
 
     addMessageData(messageData, "A new message!")
 
+      output$messageMenu <- renderDropdownMenu({
+
+      message_df <- data.frame(text = messageData$text,
+                               icon = messageData$icon,
+                               status = messageData$status)
+
+     msgs <- apply(message_df, 1, function(row){
+                   notificationItem(text = row[['text']],
+                                    icon = icon(row[['icon']]),
+                                    status = row[['status']])
+
+                   })
+
+     dropdownMenu(type="notifications", .list = msgs)
+
+     })
+
 }
 
 ## ui.r
