@@ -5,7 +5,7 @@
 \title{renderAuthDropdownRow - creates a row of GA authentication menus}
 \usage{
 renderAuthDropdownRow(ga.table, input, session, account.id = "accounts",
-  web.prop.id = "web.prop", view.id = "view")
+  web.prop.id = "web.prop", view.id = "view", multiple = FALSE)
 }
 \arguments{
 \item{ga.table}{A table of GA profiles from getAndMergeGAAccounts().}
@@ -19,6 +19,8 @@ renderAuthDropdownRow(ga.table, input, session, account.id = "accounts",
 \item{web.prop.id}{The shiny id for web properties. Then available at input$<web.prop.id>.}
 
 \item{view.id}{The shiny id for views. Then available at input$<view.id>.}
+
+\item{multiple}{Can you choose multiple profiles?}
 }
 \value{
 Nothing.

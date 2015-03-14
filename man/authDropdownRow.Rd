@@ -5,7 +5,7 @@
 \title{authDropdownRow - creates a row of GA authentication menus}
 \usage{
 authDropdownRow(account.id = "accounts", web.prop.id = "web.prop",
-  view.id = "view")
+  view.id = "view", multiple = FALSE)
 }
 \arguments{
 \item{account.id}{The shiny id for accounts. Then available at input$<account.id>.}
@@ -13,6 +13,8 @@ authDropdownRow(account.id = "accounts", web.prop.id = "web.prop",
 \item{web.prop.id}{The shiny id for web properties. Then available at input$<web.prop.id>.}
 
 \item{view.id}{The shiny id for views. Then available at input$<view.id>.}
+
+\item{multiple}{If you can choose multiple Profiles.}
 }
 \value{
 A shinydashboard function that generates necessary HTML.

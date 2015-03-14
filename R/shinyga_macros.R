@@ -7,6 +7,7 @@
 #' @param account.id The shiny id for accounts. Then available at input$<account.id>.
 #' @param web.prop.id The shiny id for web properties. Then available at input$<web.prop.id>.
 #' @param view.id The shiny id for views. Then available at input$<view.id>.
+#' @param multiple If you can choose multiple Profiles.
 #' @seealso Shortcut using \code{\link{doAuthMacro}}.
 #' @return A shinydashboard function that generates necessary HTML.
 #' @family shiny macro functions
@@ -29,7 +30,8 @@
 #'  }
 authDropdownRow <- function(account.id  = "accounts",
                             web.prop.id = "web.prop",
-                            view.id     = "view"){
+                            view.id     = "view",
+                            multiple=FALSE){
   fluidRow(
     box(
       selectInput(account.id,
@@ -44,7 +46,8 @@ authDropdownRow <- function(account.id  = "accounts",
     box(
       selectInput(view.id,
                   label="Select View",
-                  choices = NULL)
+                  choices = NULL,
+                  multiple = multiple)
       , width = 4, title="Pick View (ID)", status="success", solidHeader=TRUE)
   )
 }
@@ -61,6 +64,7 @@ authDropdownRow <- function(account.id  = "accounts",
 #' @param account.id The shiny id for accounts. Then available at input$<account.id>.
 #' @param web.prop.id The shiny id for web properties. Then available at input$<web.prop.id>.
 #' @param view.id The shiny id for views. Then available at input$<view.id>.
+#' @param multiple Can you choose multiple profiles?
 #' @return Nothing.
 #' @seealso Shortcut using \code{\link{doAuthMacro}}.
 #' @family shiny macro functions
@@ -88,7 +92,8 @@ renderAuthDropdownRow <- function(ga.table,
                                   session,
                                   account.id  = "accounts",
                                   web.prop.id = "web.prop",
-                                  view.id     = "view"){
+                                  view.id     = "view",
+                                  multiple = FALSE){
   
   if(!is.null(account.id)){
     observe({
@@ -141,7 +146,8 @@ renderAuthDropdownRow <- function(ga.table,
       updateSelectInput(session, 
                         view.id,
                         label="Views",
-                        choices = choice)
+                        choices = choice,
+                        multiple = multiple)
     })
     
   }
@@ -327,7 +333,8 @@ doAuthMacro <- function(input,
   
   renderAuthDropdownRow(GAProfileTable(),
                         input,
-                        session)
+                        session,
+                        multiple=TRUE)
   
   return(list(table    = GAProfileTable,
               token    = AccessToken))
