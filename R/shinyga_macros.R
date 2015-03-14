@@ -118,7 +118,7 @@ renderAuthDropdownRow <- function(ga.table,
       )
       pList  <- ga.table[,c('name','webPropertyId','websiteUrl','profilename', 'id')]
       
-      pList <- pList[input$accounts %in% pList$name,]
+      pList <- pList[pList$name %in% input$accounts,]
       
       choice <- pList$websiteUrl
       
@@ -137,7 +137,7 @@ renderAuthDropdownRow <- function(ga.table,
       )
       pList <- ga.table[,c('name','webPropertyId','websiteUrl','profilename', 'id')]
       
-      pList <- pList[input$web.prop %in% pList$websiteUrl,]
+      pList <- pList[pList$websiteUrl %in% input$web.prop,]
       
       choice <- pList$id 
       
