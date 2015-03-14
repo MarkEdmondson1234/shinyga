@@ -296,11 +296,6 @@ rollupGA <- function(GAProfileTable,
   
   Results <- data.frame()
   
-  if(is.na(GAProfileTable$name[1])){
-    warning("No GA Profiles found.")
-    return()
-  }
-  
   ## Adding check of columns
   expected.columns <- unlist(stringr::str_split(gsub("ga:",
                                             "",
