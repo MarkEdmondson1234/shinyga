@@ -5,7 +5,7 @@
 \title{Quick setup of shinyGA authentication}
 \usage{
 doAuthMacro(input, output, session, securityCode, client.id, client.secret,
-  client.uri, multiple = FALSE)
+  client.uri)
 }
 \arguments{
 \item{input}{Shiny input object.}
@@ -21,8 +21,6 @@ doAuthMacro(input, output, session, securityCode, client.id, client.secret,
 \item{client.secret}{The client secret taken from the Google API Console.}
 
 \item{client.uri}{The URL of where your Shiny application sits, that will read state parameter.}
-
-\item{multiple}{Flag to have multiple profile selection.}
 }
 \value{
 A named list. See example for uses in shinyServer().

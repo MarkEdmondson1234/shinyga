@@ -64,7 +64,6 @@ authDropdownRow <- function(account.id  = "accounts",
 #' @param account.id The shiny id for accounts. Then available at input$<account.id>.
 #' @param web.prop.id The shiny id for web properties. Then available at input$<web.prop.id>.
 #' @param view.id The shiny id for views. Then available at input$<view.id>.
-#' @param multiple Can you choose multiple profiles?
 #' @return Nothing.
 #' @seealso Shortcut using \code{\link{doAuthMacro}}.
 #' @family shiny macro functions
@@ -92,8 +91,7 @@ renderAuthDropdownRow <- function(ga.table,
                                   session,
                                   account.id  = "accounts",
                                   web.prop.id = "web.prop",
-                                  view.id     = "view",
-                                  multiple = FALSE){
+                                  view.id     = "view"){
   
   if(!is.null(account.id)){
     observe({
@@ -146,8 +144,7 @@ renderAuthDropdownRow <- function(ga.table,
       updateSelectInput(session, 
                         view.id,
                         label="Views",
-                        choices = choice,
-                        multiple = multiple)
+                        choices = choice)
     })
     
   }
@@ -218,7 +215,6 @@ metricSelect  <- function(inputId="metric_choice"){
 #' @param client.id The client ID taken from the Google API Console.
 #' @param client.secret The client secret taken from the Google API Console.
 #' @param client.uri The URL of where your Shiny application sits, that will read state parameter.
-#' @param multiple Flag to have multiple profile selection.
 #' @return
 #' A named list. See example for uses in shinyServer().
 #' \describe{
@@ -276,8 +272,7 @@ doAuthMacro <- function(input,
                         securityCode,
                         client.id,
                         client.secret,
-                        client.uri,
-                        multiple=FALSE){
+                        client.uri){
   
   
   
@@ -335,8 +330,7 @@ doAuthMacro <- function(input,
   
   renderAuthDropdownRow(GAProfileTable(),
                         input,
-                        session,
-                        multiple=TRUE)
+                        session)
   
   return(list(table    = GAProfileTable,
               token    = AccessToken))
