@@ -7,7 +7,7 @@
 #' @param account.id The shiny id for accounts. Then available at input$<account.id>.
 #' @param web.prop.id The shiny id for web properties. Then available at input$<web.prop.id>.
 #' @param view.id The shiny id for views. Then available at input$<view.id>.
-#' @param multiple If you can choose multiple Profiles.
+#' @param multiple Whether you have multi-select on menus. Default FALSE.
 #' @seealso Shortcut using \code{\link{doAuthMacro}}.
 #' @return A shinydashboard function that generates necessary HTML.
 #' @family shiny macro functions
@@ -35,13 +35,13 @@ authDropdownRow <- function(account.id  = "accounts",
   fluidRow(
     box(
       selectInput(account.id,
-                  label="Accounts",
+                  label=paste0("Select Account", ifelse(multiple, "s.  (Multiple allowed)","")),
                   choices = NULL,
                   multiple = multiple)
       , width = 4, title="Select Account", status="success", solidHeader=TRUE),
     box(
       selectInput(web.prop.id,
-                  label="WebProperty",
+                  label=paste0("Select Web Propert", ifelse(multiple, "ies.  (Multiple allowed)","y")),
                   choices = NULL,
                   multiple = multiple)
       , width = 4, title="Select Web Property", status="success", solidHeader=TRUE),
