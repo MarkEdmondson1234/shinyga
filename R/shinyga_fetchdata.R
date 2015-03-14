@@ -348,7 +348,7 @@ rollupGA <- function(GAProfileTable,
       #cat("\n### GA.data:", names(GA.data), "\n")
       #       columnChecker(expected.columns, names(GA.data), stopTF = FALSE)
       
-      GA.data$name <- GAProfileTable$name[i]
+      GA.data$name <- GAProfileTable$id[i]
       GA.data$currency <- GAProfileTable$currency[i]
       print(paste0("Fetch Successful, writing ",
                    nrow(GA.data), " rows, ",
