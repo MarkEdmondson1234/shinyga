@@ -218,6 +218,7 @@ metricSelect  <- function(inputId="metric_choice"){
 #' @param client.id The client ID taken from the Google API Console.
 #' @param client.secret The client secret taken from the Google API Console.
 #' @param client.uri The URL of where your Shiny application sits, that will read state parameter.
+#' @param multiple Flag to have multiple profile selection.
 #' @return
 #' A named list. See example for uses in shinyServer().
 #' \describe{
@@ -275,7 +276,8 @@ doAuthMacro <- function(input,
                         securityCode,
                         client.id,
                         client.secret,
-                        client.uri){
+                        client.uri,
+                        multiple=FALSE){
   
   
   
