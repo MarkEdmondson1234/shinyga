@@ -36,12 +36,14 @@ authDropdownRow <- function(account.id  = "accounts",
     box(
       selectInput(account.id,
                   label="Accounts",
-                  choices = NULL)
+                  choices = NULL,
+                  multiple = multiple)
       , width = 4, title="Select Account", status="success", solidHeader=TRUE),
     box(
       selectInput(web.prop.id,
                   label="WebProperty",
-                  choices = NULL)
+                  choices = NULL,
+                  multiple = multiple)
       , width = 4, title="Select Web Property", status="success", solidHeader=TRUE),
     box(
       selectInput(view.id,
