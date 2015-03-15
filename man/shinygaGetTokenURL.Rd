@@ -5,7 +5,9 @@
 \title{Returns the authentication URL}
 \usage{
 shinygaGetTokenURL(state, client.id = CLIENT_ID,
-  client.secret = CLIENT_SECRET, redirect.uri = CLIENT_URL)
+  client.secret = CLIENT_SECRET, redirect.uri = CLIENT_URL,
+  scope = c("https://www.googleapis.com/auth/analytics",
+  "https://www.googleapis.com/auth/analytics.readonly"))
 }
 \arguments{
 \item{state}{A string you pass to check authentication is correct.}
@@ -15,6 +17,10 @@ shinygaGetTokenURL(state, client.id = CLIENT_ID,
 \item{client.secret}{The client secret taken from the Google API Console.}
 
 \item{redirect.uri}{The URL of where your Shiny application sits, that will read state parameter.}
+
+\item{scope}{Character vector of URLs for the Google API you want to activate.
+Defaults to \code{c("https://www.googleapis.com/auth/analytics",
+              "https://www.googleapis.com/auth/analytics.readonly")}}
 }
 \value{
 The URL a user should click on to start authentication.

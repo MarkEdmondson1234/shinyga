@@ -14,7 +14,7 @@ authDropdownRow(account.id = "accounts", web.prop.id = "web.prop",
 
 \item{view.id}{The shiny id for views. Then available at input$<view.id>.}
 
-\item{multiple}{If you can choose multiple Profiles.}
+\item{multiple}{Whether you have multi-select on menus. Default FALSE.}
 }
 \value{
 A shinydashboard function that generates necessary HTML.

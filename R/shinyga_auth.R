@@ -112,6 +112,9 @@ authReturnCode <- function(session, securityCode){
 #' @param client.id The client ID taken from the Google API Console.
 #' @param client.secret The client secret taken from the Google API Console.
 #' @param redirect.uri The URL of where your Shiny application sits, that will read state parameter.
+#' @param scope Vector of URLs for the Google API you want to activate. Will be encoded. 
+#'   Defaults to \code{c("https://www.googleapis.com/auth/analytics",
+#'                 "https://www.googleapis.com/auth/analytics.readonly")}
 #' @return The URL a user should click on to start authentication.
 #' @seealso Shortcut using \code{\link{doAuthMacro}}.
 #' @family authentication functions
@@ -145,16 +148,19 @@ authReturnCode <- function(session, securityCode){
 #'     })
 #' }
 #' }
-shinygaGetTokenURL <- function(state,
-                               client.id     = CLIENT_ID,
-                               client.secret = CLIENT_SECRET,
-                               redirect.uri  = CLIENT_URL) {
+shinygaGetTokenURL <- 
+  function(state,
+           client.id     = CLIENT_ID,
+           client.secret = CLIENT_SECRET,
+           redirect.uri  = CLIENT_URL,
+           scope         = c("https://www.googleapis.com/auth/analytics",
+                             "https://www.googleapis.com/auth/analytics.readonly")) {
+    
+  scopeEnc <- sapply(scope, URLencode, reserved=TRUE)
+  scopeEnc <- paste(scopeEnc, sep='', collapse='+')
   
   url <- paste('https://accounts.google.com/o/oauth2/auth?',
-               'scope=https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics+',
-               #                'https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics.edit+',
-               #                'https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics.manage.users+',
-               'https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fanalytics.readonly&',
+               'scope=',scopeEnc,'&',
                'state=',state,'&',
                'redirect_uri=', redirect.uri, '&',
                'response_type=code&',
