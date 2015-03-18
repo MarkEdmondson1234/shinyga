@@ -22,7 +22,7 @@ Then:
     ## client info taken from Google API console.
     CLIENT_ID      <-  "xxxxx.apps.googleusercontent.com"
     CLIENT_SECRET  <-  "xxxxxxxxxxxx"
-    CLIENT_URL     <-  'https://mark.shinyapps.io/ga-effect/'
+    CLIENT_URL     <-  'https://your-account.shinyapps.io/your-app/'
     ## comment out for deployment, in for local testing via runApp(port=6423)
     CLIENT_URL     <-  'http://127.0.0.1:6423' 
     
