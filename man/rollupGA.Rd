@@ -24,6 +24,8 @@ rollupGA(GAProfileTable, sort = "", max_results = -1,
 
 \item{walk}{If results are sampled, whether to do daily fetches to avoid sampling}
 
+\item{ga}{The token needed to fetch the data}
+
 \item{start.date}{Start date of data fetch}
 
 \item{end.date}{End date of data fetch}
@@ -49,8 +51,6 @@ rollupGA(GAProfileTable, sort = "", max_results = -1,
 \item{rbr}{Row by Row setting, will return NAs for empty rows}
 
 \item{envir}{Which environment the data will be}
-
-\item{The}{token needed to fetch the data}
 }
 \value{
 A dataframe of GA data with the GA View specified in a column.

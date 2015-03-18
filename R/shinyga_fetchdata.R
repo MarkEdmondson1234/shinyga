@@ -248,7 +248,7 @@ processManagementData = function(url, keep) {
 #' @param return.url Whether to return a URL
 #' @param rbr Row by Row setting, will return NAs for empty rows
 #' @param envir Which environment the data will be 
-#' @param The token needed to fetch the data
+#' @param ga The token needed to fetch the data
 #' @return A dataframe of GA data with the GA View specified in a column.
 #' @family fetch data functions
 #' @examples

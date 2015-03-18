@@ -7,7 +7,11 @@
 \title{shinyga: Easier Google Analytics Dashboards in Shiny.}
 \description{
 This package adds functions to be used within a Shiny project, that quickstart
-importing and displaying Google Analytics data.
+importing and displaying Google API data.
+}
+\details{
+Package focused on quick setup of Google Authentication APIs,
+with initial focus on Google Analytics.
 }
 \section{Authentication functions}{
 

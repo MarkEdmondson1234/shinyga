@@ -35,10 +35,10 @@ Activate Analytics API
 Fill in details, get the client ID, secret and URL.
 
 ### Client URL: Running Locally
-For local the Shiny runApp() uses a random port, so specify using runApp(port=1234) and put that in the Google API console as your port number e.g. 127.0.0.1:1234
+For local the Shiny runApp() uses a random port, so specify using runApp(port=1234) and put that in the Google API console as your port number e.g. 127.0.0.1:1234 and use for the CLIENT_URL in the shinyga app.
 
 ### Client URL: Running on Shiny Server or Shinyapps.io
-Use the URL where your app is published as your CLIENT_URL.  You can put both your local and live URL in the Google API console. 
+Use the URL where your app is published as your CLIENT_URL.  You can put both your local and live URL in the Google API console, and comment out the local one when you are ready to deploy.
 
 ## Run Shiny
 
@@ -112,15 +112,16 @@ Read how to use [Shiny apps](http://shiny.rstudio.com/) before using this packag
     library(shinydashboard)
     library(shinyga)
 
-    dashboardPage(dashboardHeader(
-      title = "Shiny Google Authentication demo",
-      dropdownMenuOutput("messageMenu")
-    ),
-    dashboardSidebar(
-      sidebarMenu(
-        menuItem("Tab1", tabName = "setup", icon = icon("gears")),
-        menuItem("Tab2", tabName = "dash", icon = icon("dashboard")))
+    dashboardPage(
+      dashboardHeader(
+        title = "Shiny Google Authentication demo",
+        dropdownMenuOutput("messageMenu")
       ),
+      dashboardSidebar(
+        sidebarMenu(
+          menuItem("Tab1", tabName = "setup", icon = icon("gears")),
+          menuItem("Tab2", tabName = "dash", icon = icon("dashboard")))
+        ),
       dashboardBody(
         uiOutput("AuthGAURL"),
         authDropdownRow(),
