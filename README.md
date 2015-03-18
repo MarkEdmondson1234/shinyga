@@ -4,7 +4,7 @@ Easier Google Authentication Dashboards in Shiny
 ## Installation
 
     library(devtools)
-    devtools::install_github("MarkEdmondson1234/shinyga", auth_token = "7d1ec030bb8aa845276dffb0f5ed4b8c1b728206")
+    devtools::install_github("MarkEdmondson1234/shinyga")
     
     library(shiny)
     library(shinyapps)
