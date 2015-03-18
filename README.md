@@ -17,7 +17,6 @@ Provides utility functions to help easily setup up a Google API authentication f
     devtools::install_github("MarkEdmondson1234/shinyga")
     
     library(shiny)
-    library(shinyapps)
     library(shinydashboard)
     library(shinyga)
     
@@ -46,6 +45,10 @@ Read how to use [Shiny apps](http://shiny.rstudio.com/) before using this packag
 # Example Shiny App Code
  
     ###### server.r
+    
+    library(shiny)
+    library(shinydashboard)
+    library(shinyga)
     
     ## client info taken from Google API console.
     CLIENT_ID      <-  "xxxxx.apps.googleusercontent.com"
