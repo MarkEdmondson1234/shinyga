@@ -1,7 +1,7 @@
 # shinyga (Shiny Google Authentication)
 Easier Google Authentication Dashboards in Shiny
 
-Pre-release version, please tell me any bugs or problems with examples or documentation in the [issue tracker](https://github.com/MarkEdmondson1234/shinyga/issues)
+Version 0.1.0 - please tell me any bugs or problems with examples or documentation in the [issue tracker](https://github.com/MarkEdmondson1234/shinyga/issues)
 
 Most functions have help files, start with ?shinyga
 
