@@ -1,5 +1,7 @@
 # shinyga (Shiny Google Authentication)
-Easier Google Authentication Dashboards in Shiny
+Easier Google Authentication Dashboards in Shiny.
+
+The functions in the package were used to help create the [GA Effect dashboard](http://markedmondson.me/how-i-made-ga-effect-creating-an-online-statistics-dashboard-using-reais)
 
 Version 0.1.0 - please tell me any bugs or problems with examples or documentation in the [issue tracker](https://github.com/MarkEdmondson1234/shinyga/issues)
 
