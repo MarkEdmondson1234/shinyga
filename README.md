@@ -39,7 +39,9 @@ For local the Shiny runApp() uses a random port, so specify using runApp(port=12
 ### Client URL: Running on Shiny Server or Shinyapps.io
 Use the URL where your app is published as your CLIENT_URL.  You can put both your local and live URL in the Google API console. 
 
-Read how to use [Shiny apps](http://shiny.rstudio.com/)
+## Run Shiny
+
+Read how to use [Shiny apps](http://shiny.rstudio.com/) before using this package.
 
 # Example Shiny App Code
  
@@ -106,7 +108,7 @@ Read how to use [Shiny apps](http://shiny.rstudio.com/)
     library(shinyga)
 
     dashboardPage(dashboardHeader(
-      title = "shinyGA demo",
+      title = "Shiny Google Authentication demo",
       dropdownMenuOutput("messageMenu")
     ),
     dashboardSidebar(
