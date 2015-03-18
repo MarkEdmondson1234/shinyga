@@ -27,7 +27,6 @@ Provides utility functions to help easily setup up a Google API authentication f
 
 ## Get Google API credentials
 
-
 Get your client secret, ID from the [Google API console](https://ga-dev-tools.appspot.com/explorer/)
 
 Activate Analytics API
@@ -55,50 +54,70 @@ Read how to use [Shiny apps](http://shiny.rstudio.com/)
     
     securityCode <- createCode()
     
-    shinyServer(function(input, output, session)){
+    shinyServer(function(input, output, session){
+  
+      ## returns list of token and profile.table ----------------------------------
+      auth <- doAuthMacro(input, output, session,
+                          securityCode,
+                          client.id     = CLIENT_ID,
+                          client.secret = CLIENT_SECRET, 
+                          client.uri    = CLIENT_URL)
+  
+      ## auth returns auth$table() and auth$token() to be used in API calls.
+  
+      ## get the GA data ----------------------------------------------------------
+      gadata <- reactive({
+        validate(
+          need(auth$token(), "Authentication needed"))
     
-    ## returns list of token and profile.table
-    auth <- doAuthMacro(input, output, session,
-                        securityCode,
-                        client.id     = CLIENT_ID,
-                        client.secret = CLIENT_SECRET, 
-                        client.uri    = CLIENT_URL)
-    
-    ga.token         <- auth$token
-    profile.table    <- auth$table
-    
-    ## call the token for API calls
-    
-    gadata <- reactive({
-    
-        rollupGA(GAProfileTable = profile.table(),
-                 dimensions     = 'ga:date',
-                 start_date     = '2014-03-13',
-                 end_date       = '2015-03-13'
-                 metrics        = 'ga:sessions',
-                 ga             = ga.token())
-                 
-                 }) 
+        df    <- auth$table()
+        token <- auth$token()
+        gaid <- as.character(input$view)
         
-     
-     output$gaplot <- renderPlot(gadata)
-     
-    }
+        profileRow <- df[df$id %in% gaid,] 
+        
+        data <- rollupGA(GAProfileTable = profileRow,
+                         dimensions = 'ga:date',
+                         start_date = '2014-09-01',
+                         metrics = 'ga:sessions',
+                         end_date = '2015-03-01',
+                         ga = token)
+                         
+        data[,c('date','sessions')]
+      }) 
+  
+  
+      ## do a plot! ---------------------------------------------------------------
+      output$gaplot <- renderPlot({
+        validate(
+          need(gadata(), "Authenticate to see"))
+    
+        plot(gadata(), type="l") 
+    
+        })
+  
+    })
+
     
     ##### ui.r
     
+    library(shiny)
+    library(shinydashboard)
+    library(shinyga)
+
     dashboardPage(dashboardHeader(
-                     title = "shinyGA demo",
-                     dropdownMenuOutput("messageMenu")
-                     ),
-                  dashboardSidebar(
-                      sidebarMenu(
-                          menuItem("Setup", tabName = "setup", icon = icon("gears")),
-                          menuItem("Results", tabName = "dash", icon = icon("dashboard"))
-                          ),
-                  dashboardBody(
-                      authDropdownRow(),
-                      renderPlot("gaplot")
-                      )
+      title = "shinyGA demo",
+      dropdownMenuOutput("messageMenu")
+    ),
+    dashboardSidebar(
+      sidebarMenu(
+        menuItem("Tab1", tabName = "setup", icon = icon("gears")),
+        menuItem("Tab2", tabName = "dash", icon = icon("dashboard")))
+      ),
+      dashboardBody(
+        uiOutput("AuthGAURL"),
+        authDropdownRow(),
+        plotOutput("gaplot")
+      )
     )
 
