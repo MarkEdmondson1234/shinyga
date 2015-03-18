@@ -1,7 +1,7 @@
 # shinyga (Shiny Google Authentication)
 Easier Google Authentication Dashboards in Shiny
 
-Pre-release version, please tell me any bugs in (issue tracker)[/issues]
+Pre-release version, please tell me any bugs in [issue tracker](/issues)
 
 Package focused on quick setup of Google Authentication APIs, with initial focus on Google Analytics.
 
@@ -21,13 +21,13 @@ Utility functions to help easily setup up a Google API authentication flow.  Foc
 
 ## To Use (to be fleshed out)
 
-Get your client secret, ID from the (Google API console)[https://ga-dev-tools.appspot.com/explorer/]
+Get your client secret, ID from the [Google API console](https://ga-dev-tools.appspot.com/explorer/)
 
 Your URL is either local (127.0.0.1:XXXX) or the URL of where your Shiny app is hosted on Shiny Server or on Shinyapps.io
 
 For local the Shiny runApp() uses a random port, so specify using runApp(port=1234) and put that in the Google API console as your port number e.g. 127.0.0.1:1234
 
-Read how to use (Shiny apps)[http://shiny.rstudio.com/]
+Read how to use [Shiny apps](http://shiny.rstudio.com/)
 
 Then (todo check example):
  
