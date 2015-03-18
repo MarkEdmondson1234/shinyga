@@ -1,13 +1,15 @@
 # shinyga (Shiny Google Authentication)
 Easier Google Authentication Dashboards in Shiny
 
-Pre-release version, please tell me any bugs in [issue tracker](/issues)
+Pre-release version, please tell me any bugs or problems with examples or documentation in the [issue tracker](https://github.com/MarkEdmondson1234/shinyga/issues)
 
-Package focused on quick setup of Google Authentication APIs, with initial focus on Google Analytics.
+Most functions have help files, start with ?shinyga
 
-## What it does
+The package focused on quick setup of Google Authentication APIs, with initial focus on Google Analytics, so please keep that in mind when asking for features. 
 
-Utility functions to help easily setup up a Google API authentication flow.  Focus on Google Analytics initially, with macros to help easy download of GA data, but to be expanded into other Google APIs.
+## What shinyga does
+
+Provides utility functions to help easily setup up a Google API authentication flow in Shiny. The focus is on Google Analytics initially, with macros to help easy download of GA data, but to be expanded later into other Google APIs such as Google Tag Manager, Gmail, BigQuery etc.
 
 ## Installation
 
@@ -18,18 +20,29 @@ Utility functions to help easily setup up a Google API authentication flow.  Foc
     library(shinyapps)
     library(shinydashboard)
     library(shinyga)
+    
+    ?shinyga
 
-## To Use (to be fleshed out)
+# To Use
+
+## Get Google API credentials
+
 
 Get your client secret, ID from the [Google API console](https://ga-dev-tools.appspot.com/explorer/)
 
-Your URL is either local (127.0.0.1:XXXX) or the URL of where your Shiny app is hosted on Shiny Server or on Shinyapps.io
+Activate Analytics API
 
+Fill in details, get the client ID, secret and URL.
+
+### Client URL: Running Locally
 For local the Shiny runApp() uses a random port, so specify using runApp(port=1234) and put that in the Google API console as your port number e.g. 127.0.0.1:1234
+
+### Client URL: Running on Shiny Server or Shinyapps.io
+Use the URL where your app is published as your CLIENT_URL.  You can put both your local and live URL in the Google API console. 
 
 Read how to use [Shiny apps](http://shiny.rstudio.com/)
 
-Then (todo check example):
+# Example Shiny App Code
  
     ###### server.r
     
