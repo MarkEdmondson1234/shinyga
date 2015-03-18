@@ -16,10 +16,10 @@ shinygaGetAccounts = function(token, start=1, max=1000) {
                '?access_token=', token,
                '&start-index=', start,
                '&max-results=', max,
-               sep='', collapse='');
+               sep='', collapse='')
   
   if (length(token) > 0) {
-    return(processManagementData(url, c('id', 'name', 'created', 'updated')));
+    return(processManagementData(url, c('id', 'name', 'created', 'updated')))
   } else {
     return()
   }
@@ -44,10 +44,11 @@ shinygaGetWebProperties = function(token, accountId='~all', start=1, max=1000) {
                '?access_token=', token,
                '&start-index=', start,
                '&max-results=', max,
-               sep='', collapse='');
+               sep='', collapse='')
+  
   if (length(token) > 0) {
     return(processManagementData(url, 
-                                 c('id', 'name', 'websiteUrl', 'created', 'updated')));
+                                 c('id', 'name', 'websiteUrl', 'created', 'updated')))
   } else {
     return()
   }
@@ -79,7 +80,8 @@ shinygaGetProfiles = function(token,
                '?access_token=', token,
                '&start-index=', start,
                '&max-results=', max,
-               sep='', collapse='');
+               sep='', collapse='')
+  
   # possible deparse.error, sapply(test$items,length)
   return(processManagementData(url, 
                                c('id', 
@@ -91,7 +93,7 @@ shinygaGetProfiles = function(token,
                                  'eCommerceTracking', 
                                  'websiteUrl', 
                                  'created', 
-                                 'updated')));
+                                 'updated')))
 }
 
 #' Get GA Goals
@@ -123,7 +125,8 @@ shinygaGetGoals = function(token,
                '?access_token=', token,
                '&start-index=', start,
                '&max-results=', max,
-               sep='', collapse='');
+               sep='', collapse='')
+  
   return(processManagementData(url, 
                                c('id', 
                                  'accountId', 
@@ -134,7 +137,7 @@ shinygaGetGoals = function(token,
                                  'active', 
                                  'type', 
                                  'created', 
-                                 'updated')));
+                                 'updated')))
 }
 
 #' Get GA Segments
@@ -157,8 +160,17 @@ shinygaGetSegments = function(token, start=1, max=1000) {
                '&start-index=', start,
                '&max-results=', max,
                sep='', collapse='')
-  return(processManagementData(url, 
-                               c('id', 'segmentId', 'name', 'definition', 'created', 'updated')))
+  
+  keep <- c('id', 'segmentId', 'name', 'definition', 'created', 'updated')
+
+  segdf <- processManagementData(url, keep)
+  
+  if (all(names(segdf) %in% keep)) {
+    return(segdf)
+  } else {
+    ## to do: return a dataframe of standard segments instead
+    return(data.frame(id='', segmentId='gaid::-1', name='Error fetching segments', created='',updated='' ))
+  }
 }
 
 
@@ -185,7 +197,7 @@ shinygaGetSegments = function(token, start=1, max=1000) {
 #'}
 processManagementData = function(url, keep) {
   
-  ga.json <- RJSONIO::fromJSON(RCurl::getURL(url));
+  ga.json <- RJSONIO::fromJSON(RCurl::getURL(url))
   
   if (is.null(ga.json)) { stop('data fetching did not output correct format'); }
   #     if (!is.null(ga.json$error$message)) {stop('Error fetching GA Data: ',

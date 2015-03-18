@@ -1,11 +1,3 @@
-### Authentication functions --------------------------------------------------
-
-# CLIENT_ID      <-  "942634425021.apps.googleusercontent.com"
-# CLIENT_SECRET  <-  "Whhj5ZM3goSgWj91Q4vMNcD8"
-# CLIENT_URL     <-  'https://mark.shinyapps.io/ga-effect/'
-# CLIENT_URL     <-  'http://127.0.0.1:6423'
-
-### Authentication functions
 #' Creates a random character code
 #' 
 #' @param seed The seed for random code.

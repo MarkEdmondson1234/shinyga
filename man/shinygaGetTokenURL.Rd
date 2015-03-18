@@ -18,7 +18,7 @@ shinygaGetTokenURL(state, client.id = CLIENT_ID,
 
 \item{redirect.uri}{The URL of where your Shiny application sits, that will read state parameter.}
 
-\item{scope}{Character vector of URLs for the Google API you want to activate.
+\item{scope}{Vector of URLs for the Google API you want to activate. Will be encoded.
 Defaults to \code{c("https://www.googleapis.com/auth/analytics",
               "https://www.googleapis.com/auth/analytics.readonly")}}
 }

@@ -28,6 +28,7 @@ This function creates the menu and fetches the GA segments.
 \examples{
 \dontrun{
 
+
 ## client info taken from Google API console.
 CLIENT_ID      <-  "xxxxx.apps.googleusercontent.com"
 CLIENT_SECRET  <-  "xxxxxxxxxxxx"

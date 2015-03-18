@@ -4,8 +4,9 @@
 #' importing and displaying Google Analytics data.
 #' 
 #' @section Authentication functions:
-#' \code{\link{renderAuthenticationMacro}}
+#' \code{\link{doAuthMacro}}
 #' \code{\link{renderAuthDropdownRow}}
+#' \code{\link{createCode}}
 #' 
 #' @section Message Functions:
 #' \code{\link{initMessageData}}

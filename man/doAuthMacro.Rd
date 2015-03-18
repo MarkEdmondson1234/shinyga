@@ -64,12 +64,16 @@ shinyServer(function(input, output, session)){
 
   ## call the token for API calls
 
-  data <- rollupGA(GAProfileTable = profile.table(),
-                   dimensions     = 'ga:date',
-                   start_date     = '2014-03-13',
-                   end_date       = '2015-03-13'
-                   metrics        = 'ga:sessions',
-                   ga             = ga.token())
+  gadata <- reactive({
+
+    rollupGA(GAProfileTable = profile.table(),
+             dimensions     = 'ga:date',
+             start_date     = '2014-03-13',
+             end_date       = '2015-03-13'
+             metrics        = 'ga:sessions',
+             ga             = ga.token())
+                 })
+
   }
 }
 }

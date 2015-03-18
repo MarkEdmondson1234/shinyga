@@ -260,12 +260,16 @@ metricSelect  <- function(inputId="metric_choice"){
 #'  
 #'   ## call the token for API calls
 #'  
-#'   data <- rollupGA(GAProfileTable = profile.table(),
-#'                    dimensions     = 'ga:date',
-#'                    start_date     = '2014-03-13',
-#'                    end_date       = '2015-03-13'
-#'                    metrics        = 'ga:sessions',
-#'                    ga             = ga.token())
+#'   gadata <- reactive({
+#'   
+#'     rollupGA(GAProfileTable = profile.table(),
+#'              dimensions     = 'ga:date',
+#'              start_date     = '2014-03-13',
+#'              end_date       = '2015-03-13'
+#'              metrics        = 'ga:sessions',
+#'              ga             = ga.token())
+#'                  }) 
+#'                
 #'   }
 #' }
 doAuthMacro <- function(input,
@@ -358,6 +362,7 @@ doAuthMacro <- function(input,
 #' @family shiny macro functions
 #' @examples
 #' \dontrun{
+#' 
 #' 
 #' ## client info taken from Google API console.
 #' CLIENT_ID      <-  "xxxxx.apps.googleusercontent.com"
