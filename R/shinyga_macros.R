@@ -278,6 +278,7 @@ doAuthMacro <- function(input, output, session,
       paste0(session$clientData$url_protocol,
              session$clientData$url_hostname,
              session$clientData$url_pathname,
+             ":",
              session$clientData$url_port)
     } else {
       NULL
