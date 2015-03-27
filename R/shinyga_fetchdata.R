@@ -197,15 +197,7 @@ shinygaGetSegments = function(token, start=1, max=1000) {
 #'}
 processManagementData = function(url, keep) {
   
-#   options(RCurlOptions = list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl")))
-  
-#   ga.json <- RJSONIO::fromJSON(RCurl::getURL(url))
-#   ga.json <- RJSONIO::fromJSON(httr::content(httr::GET(url), "text"))
   ga.json <- httr::content(httr::GET(url))
-  
-  warning(ga.json)
-                                
-                                
   
   if (is.null(ga.json)) { stop('data fetching did not output correct format'); }
   #     if (!is.null(ga.json$error$message)) {stop('Error fetching GA Data: ',
@@ -494,10 +486,6 @@ MEgetData = function(ids,
     return(url);
   }
   
-  # get data and convert from json to list-format
-  # thanks to Schaun Wheeler this will not provoke the weird SSL-bug
-  # switched to use httr
-
   request <- httr::GET(url);
   ga.data <- httr::content(request);
   
@@ -507,8 +495,6 @@ MEgetData = function(ids,
   if (!missing(output.raw)) {
     assign(output.raw, ga.data, envir = envir);
   }
-  
-  ###### ga.data <- rjson::fromJSON(ga.data); # use rjsons parser
   
   # output error and stop
   if (!is.null(ga.data$error)) {
