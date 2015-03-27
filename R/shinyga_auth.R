@@ -229,9 +229,11 @@ shinygaGetToken <- function(code,
                                      grant_type = 'authorization_code')
                          )
   
-  token.data <- RJSONIO::fromJSON(raw.data);
-  now <- as.numeric(Sys.time());
-  token <- c(token.data, timestamp = c('first'=now, 'refresh'=now));
+  warning(raw.data)
+  
+  token.data <- RJSONIO::fromJSON(contet(raw.data, "text")
+  now <- as.numeric(Sys.time())
+  token <- c(token.data, timestamp = c('first'=now, 'refresh'=now))
   
   return(token)
 }
