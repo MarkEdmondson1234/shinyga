@@ -230,6 +230,7 @@ shinygaGetSegments = function(token, start=1, max=1000) {
     
     
     return(backup)
+  }
 }
 
 
