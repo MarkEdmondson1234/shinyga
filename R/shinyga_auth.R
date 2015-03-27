@@ -221,11 +221,12 @@ shinygaGetToken <- function(code,
 #                               style = 'POST')
   
   raw.data <- httr::POST('https://accounts.google.com/o/oauth2/token',
-                         code = code,
-                         client_id = client.id,
-                         client_secret = client.secret,
-                         redirect_uri = redirect.uri,
-                         grant_type = 'authorization_code'
+                         encode = "form",
+                         body = list(code = code,
+                                     client_id = client.id,
+                                     client_secret = client.secret,
+                                     redirect_uri = redirect.uri,
+                                     grant_type = 'authorization_code')
                          )
   
   token.data <- RJSONIO::fromJSON(raw.data);
