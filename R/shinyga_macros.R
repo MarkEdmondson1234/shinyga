@@ -210,13 +210,13 @@ metricSelect  <- function(inputId="metric_choice"){
 #' This function calls all the other authentication functions so you can quick start.
 #' Sacrifices customisation for speed.
 #' 
-#' @param input Shiny input object.
-#' @param output Shiny output object.
-#' @param session Shiny session object.
 #' @param securityCode A unique session code, such as from createCode()
 #' @param client.id The client ID taken from the Google API Console.
 #' @param client.secret The client secret taken from the Google API Console.
-#' @param client.uri The URL of where your Shiny application sits, that will read state parameter.
+#' @param input Shiny input object.
+#' @param output Shiny output object.
+#' @param session Shiny session object.
+#' 
 #' @return
 #' A named list. See example for uses in shinyServer().
 #' \describe{
@@ -237,23 +237,17 @@ metricSelect  <- function(inputId="metric_choice"){
 #' @examples
 #' \dontrun{
 #' 
-#' ## client info taken from Google API console.
-#' CLIENT_ID      <-  "xxxxx.apps.googleusercontent.com"
-#' CLIENT_SECRET  <-  "xxxxxxxxxxxx"
-#' CLIENT_URL     <-  'https://mark.shinyapps.io/ga-effect/'
-#' ## comment out for deployment, in for local testing via runApp(port=6423)
-#' CLIENT_URL     <-  'http://127.0.0.1:6423' 
-#' 
 #' securityCode <- createCode()
 #' 
 #' shinyServer(function(input, output, session)){
 #'   
 #'   ## returns list of token and profile.table
+#'   ## client info taken from Google API console.
 #'   auth <- doAuthMacro(input, output, session,
 #'                       securityCode,
-#'                       client.id     = CLIENT_ID,
-#'                       client.secret = CLIENT_SECRET, 
-#'                       client.uri    = CLIENT_URL)
+#'                       client.id     = "xxxxx.apps.googleusercontent.com",
+#'                       client.secret = "xxxxxxxxxxxx",
+#'                       )
 #'                       
 #'   ga.token         <- auth$token
 #'   profile.table    <- auth$table
@@ -272,36 +266,52 @@ metricSelect  <- function(inputId="metric_choice"){
 #'                
 #'   }
 #' }
-doAuthMacro <- function(input,
-                        output, 
-                        session, 
+doAuthMacro <- function(input, output, session,
                         securityCode,
                         client.id,
-                        client.secret,
-                        client.uri){
+                        client.secret){
   
-  
+  ## get the apps URL as default
+  appURL <- reactive({
+    if(!is.null(session)){
+      
+      paste0(session$clientData$url_protocol,
+             "//",
+             session$clientData$url_hostname,
+             ifelse(session$clientData$url_hostname == "127.0.0.1",
+                    ":",
+                    session$clientData$url_pathname),
+             session$clientData$url_port)
+    } else {
+      NULL
+    }
+  })
   
   AuthCode <- reactive({
     authReturnCode(session, securityCode)
   })
   
   output$AuthGAURL <- renderUI({
+    validate(
+      need(appURL(), "AppURL")
+      )
+    
     a("Click Here to Authorise Your Google Analytics Access", 
       href=shinygaGetTokenURL(securityCode,
                               client.id=client.id,
                               client.secret=client.secret,
-                              redirect.uri=client.uri))
+                              redirect.uri=appURL()))
   })
   
   AccessToken <- reactive({
     validate(
-      need(AuthCode(), "Authenticate To See")
+      need(AuthCode(), "Authenticate To See"),
+      need(appURL(), "App URL")
     )
     access_token <- shinygaGetToken(code = AuthCode(),
                                     client.id=client.id,
                                     client.secret=client.secret,
-                                    redirect.uri=client.uri)
+                                    redirect.uri=appURL())
     token <- access_token$access_token
   })
   
