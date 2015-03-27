@@ -68,7 +68,8 @@ Read how to use [Shiny apps](http://shiny.rstudio.com/) before using this packag
     shinyServer(function(input, output, session){
   
       ## returns list of token and profile.table ----------------------------------
-      auth <- doAuthMacro(securityCode,
+      auth <- doAuthMacro(input, output, session,
+                          securityCode,
                           ## client info taken from Google API console.
                           client.id     = "xxxxx.apps.googleusercontent.com",
                           client.secret = "xxxxxxxxxxxx")

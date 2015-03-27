@@ -243,9 +243,11 @@ metricSelect  <- function(inputId="metric_choice"){
 #'   
 #'   ## returns list of token and profile.table
 #'   ## client info taken from Google API console.
-#'   auth <- doAuthMacro(securityCode,
+#'   auth <- doAuthMacro(input, output, session,
+#'                       securityCode,
 #'                       client.id     = "xxxxx.apps.googleusercontent.com",
-#'                       client.secret = "xxxxxxxxxxxx")
+#'                       client.secret = "xxxxxxxxxxxx",
+#'                       )
 #'                       
 #'   ga.token         <- auth$token
 #'   profile.table    <- auth$table
@@ -264,14 +266,13 @@ metricSelect  <- function(inputId="metric_choice"){
 #'                
 #'   }
 #' }
-doAuthMacro <- function(securityCode,
+doAuthMacro <- function(input, output, session,
+                        securityCode,
                         client.id,
-                        client.secret,
-                        input = input, 
-                        output = output, 
-                        session = session){
+                        client.secret){
+  
   ## get the apps URL as default
-  sd <- session$clientData
+  sd     <- session$clientData
   appURL <- paste0(sd$url_protocol,
                    sd$url_hostname,
                    sd$url_pathname,
