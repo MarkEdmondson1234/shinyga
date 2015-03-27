@@ -203,7 +203,7 @@ processManagementData = function(url, keep) {
   ga.json <- RJSONIO::fromJSON(httr::content(httr::GET(url), "text"))
   ga.json <- httr::content(httr::GET(url))
   
-  warning(ga.json1)
+  warning(ga.json)
                                 
                                 
   
