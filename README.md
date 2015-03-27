@@ -3,7 +3,12 @@ Easier Google Authentication Dashboards in Shiny.
 
 The functions in the package were used to help create the [GA Effect dashboard](http://markedmondson.me/how-i-made-ga-effect-creating-an-online-statistics-dashboard-using-reais)
 
-Version 0.1.0 - please tell me any bugs or problems with examples or documentation in the [issue tracker](https://github.com/MarkEdmondson1234/shinyga/issues)
+## Change history
+Version 0.1.1 - move everything to httr, segment fetch backup if it fails to find your own
+Version 0.1.0 - Release
+
+## Help 
+Please tell me any bugs or problems with examples or documentation in the [issue tracker](https://github.com/MarkEdmondson1234/shinyga/issues)
 
 Most functions have help files, start with ?shinyga
 
