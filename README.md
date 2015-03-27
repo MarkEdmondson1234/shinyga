@@ -4,7 +4,8 @@ Easier Google Authentication Dashboards in Shiny.
 The functions in the package were used to help create the [GA Effect dashboard](http://markedmondson.me/how-i-made-ga-effect-creating-an-online-statistics-dashboard-using-reais)
 
 ## Change history
-Version 0.1.1 - move everything to httr, segment fetch backup if it fails to find your own
+Version 0.1.1 - move everything to httr, segment fetch backup if it fails to find your own.
+
 Version 0.1.0 - Release
 
 ## Help 
@@ -62,23 +63,15 @@ Read how to use [Shiny apps](http://shiny.rstudio.com/) before using this packag
     library(shinydashboard)
     library(shinyga)
     
-    ## client info taken from Google API console.
-    CLIENT_ID      <-  "xxxxx.apps.googleusercontent.com"
-    CLIENT_SECRET  <-  "xxxxxxxxxxxx"
-    CLIENT_URL     <-  'https://your-account.shinyapps.io/your-app/'
-    ## comment out for deployment, in for local testing via runApp(port=6423)
-    CLIENT_URL     <-  'http://127.0.0.1:6423' 
-    
     securityCode <- createCode()
     
     shinyServer(function(input, output, session){
   
       ## returns list of token and profile.table ----------------------------------
-      auth <- doAuthMacro(input, output, session,
-                          securityCode,
-                          client.id     = CLIENT_ID,
-                          client.secret = CLIENT_SECRET, 
-                          client.uri    = CLIENT_URL)
+      auth <- doAuthMacro(securityCode,
+                          ## client info taken from Google API console.
+                          client.id     = "xxxxx.apps.googleusercontent.com",
+                          client.secret = "xxxxxxxxxxxx")
   
       ## auth returns auth$table() and auth$token() to be used in API calls.
   
