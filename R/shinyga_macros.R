@@ -272,11 +272,16 @@ doAuthMacro <- function(input, output, session,
                         client.secret){
   
   ## get the apps URL as default
-  sd     <- session$clientData
-  appURL <- paste0(sd$url_protocol,
-                   sd$url_hostname,
-                   sd$url_pathname,
-                   sd$url_port)
+  appURL <- reactive({
+    if(!is.null(session)){
+      sd     <- session$clientData
+      
+      paste0(sd$url_protocol,
+             sd$url_hostname,
+             sd$url_pathname,
+             sd$url_port)
+    }
+  })
   
   AuthCode <- reactive({
     authReturnCode(session, securityCode)
@@ -287,7 +292,7 @@ doAuthMacro <- function(input, output, session,
       href=shinygaGetTokenURL(securityCode,
                               client.id=client.id,
                               client.secret=client.secret,
-                              redirect.uri=appURL))
+                              redirect.uri=appURL()))
   })
   
   AccessToken <- reactive({
@@ -297,7 +302,7 @@ doAuthMacro <- function(input, output, session,
     access_token <- shinygaGetToken(code = AuthCode(),
                                     client.id=client.id,
                                     client.secret=client.secret,
-                                    redirect.uri=appURL)
+                                    redirect.uri=appURL())
     token <- access_token$access_token
   })
   
