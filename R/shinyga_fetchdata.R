@@ -200,7 +200,12 @@ processManagementData = function(url, keep) {
 #   options(RCurlOptions = list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl")))
   
 #   ga.json <- RJSONIO::fromJSON(RCurl::getURL(url))
-  ga.json <- RJSONIO::fromJSON(httr::GET(url))
+  ga.json <- RJSONIO::fromJSON(httr::content(httr::GET(url), "text"))
+  ga.json1 <- httr::content(httr::GET(url))
+  
+  warning(ga.json1)
+                                
+                                
   
   if (is.null(ga.json)) { stop('data fetching did not output correct format'); }
   #     if (!is.null(ga.json$error$message)) {stop('Error fetching GA Data: ',
