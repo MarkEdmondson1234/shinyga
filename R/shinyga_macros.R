@@ -276,6 +276,7 @@ doAuthMacro <- function(input, output, session,
     if(!is.null(session)){
       
       paste0(session$clientData$url_protocol,
+             "//",
              session$clientData$url_hostname,
              ifelse(session$clientData$url_hostname == "127.0.0.1",
                     ":",
