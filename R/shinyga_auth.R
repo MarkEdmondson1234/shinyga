@@ -231,7 +231,8 @@ shinygaGetToken <- function(code,
   
   warning(raw.data)
   
-  token.data <- RJSONIO::fromJSON(httr::content(raw.data, "text"))
+#   token.data <- RJSONIO::fromJSON(httr::content(raw.data, "text"))
+  token.data <- httr::content(raw.data)
   now <- as.numeric(Sys.time())
   token <- c(token.data, timestamp = c('first'=now, 'refresh'=now))
   

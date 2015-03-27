@@ -200,7 +200,7 @@ processManagementData = function(url, keep) {
 #   options(RCurlOptions = list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl")))
   
 #   ga.json <- RJSONIO::fromJSON(RCurl::getURL(url))
-  ga.json <- RJSONIO::fromJSON(httr::content(httr::GET(url), "text"))
+#   ga.json <- RJSONIO::fromJSON(httr::content(httr::GET(url), "text"))
   ga.json <- httr::content(httr::GET(url))
   
   warning(ga.json)
