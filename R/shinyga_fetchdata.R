@@ -161,16 +161,75 @@ shinygaGetSegments = function(token, start=1, max=1000) {
                '&max-results=', max,
                sep='', collapse='')
   
-  keep <- c('id', 'segmentId', 'name', 'definition', 'created', 'updated')
-
-  segdf <- processManagementData(url, keep)
+  keepme <- c('id', 'segmentId', 'name', 'definition', 'created', 'updated')
+  pmd <- processManagementData(url, keepme)
   
-  if (all(names(segdf) %in% keep)) {
-    return(segdf)
+  if(all(names(pmd) %in% keepme)){
+    
+    return(pmd)
   } else {
-    ## to do: return a dataframe of standard segments instead
-    return(data.frame(id='', segmentId='gaid::-1', name='Error fetching segments', created='',updated='' ))
-  }
+    warning("Error fetching segments!")
+    lapply(pmd, warning)
+    
+    lapply()
+    
+    backup <- data.frame(id = c(-(1:19), -(100:105)))
+    backup$segmentId <- paste0("gaid::",backup$id)
+    
+    backup$name <-  c("All Sessions",
+                      "New Users",
+                      "Returning Users",
+                      "Paid Traffic",  
+                      "Organic Traffic",	
+                      "Search Traffic",	
+                      "Direct Traffic",	
+                      "Referral Traffic",	
+                      "Sessions with Conversions",	
+                      "Sessions with Transactions",
+                      "Mobile and Tablet Traffic",
+                      "Non-bounce Sessions",
+                      "Tablet Traffic",
+                      "Mobile Traffic",
+                      "Tablet and Desktop Traffic",
+                      "Android Traffic",
+                      "iOS Traffic",
+                      "Other Traffic (Neither iOS nor Android)",
+                      "Bounced Sessions",
+                      "Single Session Users",
+                      "Multi-session Users",
+                      "Converters",
+                      "Non-Converters",
+                      "Made a Purchase",
+                      "Performed Site Search")
+    
+    backup$definition <- c('',  
+                           'sessions::condition::ga:userType==New Visitor',	
+                           'sessions::condition::ga:userType==Returning Visitor',	
+                           'sessions::condition::ga:medium=~^(cpc|ppc|cpa|cpm|cpv|cpp)$',	
+                           'sessions::condition::ga:medium==organic',	
+                           'sessions::condition::ga:medium=~^(cpc|ppc|cpa|cpm|cpv|cpp|organic)$',	
+                           'sessions::condition::ga:medium==(none)',	
+                           'sessions::condition::ga:medium==referral',	
+                           'sessions::condition::ga:goalCompletionsAll>0',	
+                           'sessions::condition::ga:transactions>0',	
+                           'sessions::condition::ga:deviceCategory==mobile,ga:deviceCategory==tablet',	
+                           'sessions::condition::ga:bounces==0',	
+                           'sessions::condition::ga:deviceCategory==tablet',	
+                           'sessions::condition::ga:deviceCategory==mobile',	
+                           'sessions::condition::ga:deviceCategory==tablet,ga:deviceCategory==desktop',	
+                           'sessions::condition::ga:operatingSystem==Android',	
+                           'sessions::condition::ga:operatingSystem=~^(iOS|iPad|iPhone|iPod)$',	
+                           'sessions::condition::ga:operatingSystem!~^(Android|iOS|iPad|iPhone|iPod)$',	
+                           'sessions::condition::ga:bounces>0',	
+                           'users::condition::ga:sessions==1',	
+                           'users::condition::ga:sessions>1',	
+                           'users::condition::ga:goalCompletionsAll>0,ga:transactions>0',	
+                           'users::condition::ga:goalCompletionsAll==0;ga:transactions==0',	
+                           'users::condition::ga:transactions>0',	
+                           'users::sequence::ga:searchKeyword!~^$|^(not set)$')
+    
+    
+    return(backup)
 }
 
 
