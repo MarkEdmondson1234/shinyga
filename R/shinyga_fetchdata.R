@@ -197,9 +197,10 @@ shinygaGetSegments = function(token, start=1, max=1000) {
 #'}
 processManagementData = function(url, keep) {
   
-  options(RCurlOptions = list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl")))
+#   options(RCurlOptions = list(cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl")))
   
-  ga.json <- RJSONIO::fromJSON(RCurl::getURL(url))
+#   ga.json <- RJSONIO::fromJSON(RCurl::getURL(url))
+  ga.json <- RJSONIO::fromJSON(httr::GET(url))
   
   if (is.null(ga.json)) { stop('data fetching did not output correct format'); }
   #     if (!is.null(ga.json$error$message)) {stop('Error fetching GA Data: ',
@@ -424,10 +425,10 @@ MEgetData = function(ids,
                      return.url = FALSE, rbr = FALSE, envir = .GlobalEnv,
                      token) {
   
-  options(RCurlOptions = list(verbose = FALSE, 
-                              capath = system.file("CurlSSL", "cacert.pem", package = "RCurl"),
-                              cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl"),
-                              ssl.verifypeer = FALSE))
+#   options(RCurlOptions = list(verbose = FALSE, 
+#                               capath = system.file("CurlSSL", "cacert.pem", package = "RCurl"),
+#                               cainfo = system.file("CurlSSL", "cacert.pem", package = "RCurl"),
+#                               ssl.verifypeer = FALSE))
   
   if (missing(ids)) { stop('please enter a profile id') }
   
