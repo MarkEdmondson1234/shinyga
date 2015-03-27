@@ -274,12 +274,13 @@ doAuthMacro <- function(input, output, session,
   ## get the apps URL as default
   appURL <- reactive({
     if(!is.null(session)){
-      sd     <- session$clientData
       
-      paste0(sd$url_protocol,
-             sd$url_hostname,
-             sd$url_pathname,
-             sd$url_port)
+      paste0(session$clientData$url_protocol,
+             session$clientData$url_hostname,
+             session$clientData$url_pathname,
+             session$clientData$url_port)
+    } else {
+      NULL
     }
   })
   
