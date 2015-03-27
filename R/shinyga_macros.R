@@ -288,6 +288,10 @@ doAuthMacro <- function(input, output, session,
   })
   
   output$AuthGAURL <- renderUI({
+    validate(
+      need(appURL(), "AppURL")
+      )
+    
     a("Click Here to Authorise Your Google Analytics Access", 
       href=shinygaGetTokenURL(securityCode,
                               client.id=client.id,
@@ -297,7 +301,8 @@ doAuthMacro <- function(input, output, session,
   
   AccessToken <- reactive({
     validate(
-      need(AuthCode(), "Authenticate To See")
+      need(AuthCode(), "Authenticate To See"),
+      need(appURL(), "App URL")
     )
     access_token <- shinygaGetToken(code = AuthCode(),
                                     client.id=client.id,
