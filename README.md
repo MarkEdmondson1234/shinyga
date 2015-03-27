@@ -16,6 +16,11 @@ Provides utility functions to help easily setup up a Google API authentication f
 ## Installation
 
     library(devtools)
+    
+    ## install shinydashboard dependency
+    devtools::install_github("rstudio/shinydashboard")
+    
+    ## install shinyga
     devtools::install_github("MarkEdmondson1234/shinyga")
     
     library(shiny)
