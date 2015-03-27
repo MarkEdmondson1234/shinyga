@@ -4,9 +4,13 @@ Easier Google Authentication Dashboards in Shiny.
 The functions in the package were used to help create the [GA Effect dashboard](http://markedmondson.me/how-i-made-ga-effect-creating-an-online-statistics-dashboard-using-reais)
 
 ## Change history
-Version 0.1.1 - move everything to httr, segment fetch backup if it fails to find your own.
+### Version 0.1.1 - March 27th 2015
+* Port everything to httr, get rid of RCurl, RJSONIO 
+* Segments will default to default GA ones if it can't find or parse yours
+* Removed need for redirect URL in Auth macro, Shiny will detect App URL from session info.
 
-Version 0.1.0 - Release
+### Version 0.1.0 - March 18th 2015
+* Initial Release
 
 ## Help 
 Please tell me any bugs or problems with examples or documentation in the [issue tracker](https://github.com/MarkEdmondson1234/shinyga/issues)
@@ -43,13 +47,15 @@ Get your client secret, ID from the [Google API console](https://ga-dev-tools.ap
 
 Activate Analytics API
 
-Fill in details, get the client ID, secret and URL.
+Fill in your app URL in crudentials box, get the client ID and client secret.
 
 ### Client URL: Running Locally
-For local the Shiny runApp() uses a random port, so specify using runApp(port=1234) and put that in the Google API console as your port number e.g. 127.0.0.1:1234 and use for the CLIENT_URL in the shinyga app.
+For local the Shiny runApp() uses a random port, so specify using runApp(port=1234) and put that in the Google API console as your port number e.g. 127.0.0.1:1234
 
 ### Client URL: Running on Shiny Server or Shinyapps.io
 Use the URL where your app is published as your CLIENT_URL.  You can put both your local and live URL in the Google API console, and comment out the local one when you are ready to deploy.
+
+If you use the doAuthMacro it will detect your app URL for you.
 
 ## Run Shiny
 
@@ -83,7 +89,7 @@ Read how to use [Shiny apps](http://shiny.rstudio.com/) before using this packag
     
         df    <- auth$table()
         token <- auth$token()
-        gaid <- as.character(input$view)
+        gaid  <- as.character(input$view)
         
         profileRow <- df[df$id %in% gaid,] 
         
