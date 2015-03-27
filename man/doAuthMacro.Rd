@@ -4,21 +4,20 @@
 \alias{doAuthMacro}
 \title{Quick setup of shinyGA authentication}
 \usage{
-doAuthMacro(securityCode, client.id, client.secret, input = input,
-  output = output, session = session)
+doAuthMacro(input, output, session, securityCode, client.id, client.secret)
 }
 \arguments{
-\item{securityCode}{A unique session code, such as from createCode()}
-
-\item{client.id}{The client ID taken from the Google API Console.}
-
-\item{client.secret}{The client secret taken from the Google API Console.}
-
 \item{input}{Shiny input object.}
 
 \item{output}{Shiny output object.}
 
 \item{session}{Shiny session object.}
+
+\item{securityCode}{A unique session code, such as from createCode()}
+
+\item{client.id}{The client ID taken from the Google API Console.}
+
+\item{client.secret}{The client secret taken from the Google API Console.}
 }
 \value{
 A named list. See example for uses in shinyServer().
@@ -45,9 +44,11 @@ shinyServer(function(input, output, session)){
 
   ## returns list of token and profile.table
   ## client info taken from Google API console.
-  auth <- doAuthMacro(securityCode,
+  auth <- doAuthMacro(input, output, session,
+                      securityCode,
                       client.id     = "xxxxx.apps.googleusercontent.com",
-                      client.secret = "xxxxxxxxxxxx")
+                      client.secret = "xxxxxxxxxxxx",
+                      )
 
   ga.token         <- auth$token
   profile.table    <- auth$table
