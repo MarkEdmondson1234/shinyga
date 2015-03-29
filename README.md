@@ -60,8 +60,8 @@ Provides utility functions to help easily setup up a Google API authentication f
 Get your client secret, ID from the [Google API console](https://ga-dev-tools.appspot.com/explorer/)
 
 * Create a Project
-* Go to APIs & Auth - Activate Analytics API
-* Go to APIs & Auth - Credentials
+* Go to APIs & Auth - Activate the appropriate Google API (only necessary for Analytics atm)
+* Go to APIs & Auth - Credentials.
 * Create new Client ID for web application
 * Note your Client ID and Client secret
 * Put the URL of your app in the Redirect URIs, one per line. See below.
@@ -71,15 +71,21 @@ Get your client secret, ID from the [Google API console](https://ga-dev-tools.ap
 For local the Shiny runApp() uses a random port, so specify using runApp(port=1234) and put that in the Google API console as your port number e.g. http://127.0.0.1:1234
 
 ### Client URL: Running on Shiny Server or Shinyapps.io
-Use the URL where your app is published as your CLIENT_URL.  You can put both your local and live URL in the Google API console, and comment out the local one when you are ready to deploy. e.g. https://mark.shinyapps.io/ga-effect/
+If you use the doAuthMacro() functions it will detect your app URL for you, otherwise you will need to specify it via the redirect.uri parameter in the underlying authentication functions. 
 
-If you use the doAuthMacro it will detect your app URL for you, otherwise you will need to specify it via the redirect.uri parameter in the authentication functions. 
+Use the URL where your app is published as your CLIENT_URL.  You can put both your local and live URL in the Google API console. 
+
+TIP: Comment out the local one when you are ready to deploy. e.g. https://mark.shinyapps.io/ga-effect/
 
 ## Run Shiny
 
-Read how to use [Shiny apps](http://shiny.rstudio.com/) before using this package.
+Read how to use [Shiny apps](http://shiny.rstudio.com/) before using this package.  
+
+This package also uses [shinydashboard](http://rstudio.github.io/shinydashboard/) to make the pretty layout, but its not strictly necessary.
 
 # Shiny App Code Examples
+
+Examples of minimal working examples are shown below, for you to adapt. 
 
 ## Google Analytics
  
@@ -160,7 +166,7 @@ Read how to use [Shiny apps](http://shiny.rstudio.com/) before using this packag
       )
     )
     
-## Google Sheets via https://github.com/jennybc/gspreadr
+## Google Sheets via gspreadr package
 
     ###### server.r
     
@@ -220,5 +226,3 @@ Read how to use [Shiny apps](http://shiny.rstudio.com/) before using this packag
       )
       
     ))
-    
-
