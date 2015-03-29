@@ -247,7 +247,7 @@ metricSelect  <- function(inputId="metric_choice"){
 #'   auth <- doAuthMacro(input, output, session,
 #'                       securityCode,
 #'                       client.id     = "xxxxx.apps.googleusercontent.com",
-#'                       client.secret = "xxxxxxxxxxxx",
+#'                       client.secret = "xxxxxxxxxxxx"
 #'                       )
 #'                       
 #'   ga.token         <- auth$token
@@ -304,8 +304,16 @@ doAuthMacro <- function(input, output, session,
       need(appURL(), "AppURL")
     )
     
+    if(type == "analytics") {
+      linkname <- "Analytics"
+    } else if(type == "gspreadr"){
+      linkname <- "Sheets"
+    } else {
+      linkname <- ""
+    }
+    
     a(paste0("Click here to authorise your Google ", 
-             type ,
+             linkname ,
              " access"),
       href=shinygaGetTokenURL(securityCode,
                               client.id=client.id,

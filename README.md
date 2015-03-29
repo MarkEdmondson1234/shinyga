@@ -4,6 +4,20 @@ Easier Google Authentication Dashboards in Shiny.
 The functions in the package were used to help create the [GA Effect dashboard](http://markedmondson.me/how-i-made-ga-effect-creating-an-online-statistics-dashboard-using-reais)
 
 ## Change history
+### Version 0.1.2 - March 29th 2015
+* Support for Google Sheets via Jennifer Bryan's [gspreadr](https://github.com/jennybc) package.  
+
+Call via the 'type="gspreadr"' in doAuthMacro()
+
+      auth <- doAuthMacro(input, output, session,
+                          securityCode,
+                          client.id     = "xxxxx.apps.googleusercontent.com",
+                          client.secret = "xxxxx",
+                          type = "gspreadr"
+                          )
+
+If you don't specify type then it defaults to Google Analytics. ("analytics"). Doing Analytics renders the GA account dropdowns etc.  This is not needed for Google Sheets.
+
 ### Version 0.1.1 - March 27th 2015
 * Port everything to httr, get rid of RCurl, RJSONIO 
 * Segments will default to default GA ones if it can't find or parse yours
@@ -65,7 +79,9 @@ If you use the doAuthMacro it will detect your app URL for you, otherwise you wi
 
 Read how to use [Shiny apps](http://shiny.rstudio.com/) before using this package.
 
-# Example Shiny App Code
+# Shiny App Code Examples
+
+## Google Analytics
  
     ###### server.r
     
@@ -82,7 +98,8 @@ Read how to use [Shiny apps](http://shiny.rstudio.com/) before using this packag
                           securityCode,
                           ## client info taken from Google API console.
                           client.id     = "xxxxx.apps.googleusercontent.com",
-                          client.secret = "xxxxxxxxxxxx")
+                          client.secret = "xxxxxxxxxxxx",
+                          type = "analytics")
   
       ## auth returns auth$table() and auth$token() to be used in API calls.
   
@@ -142,4 +159,66 @@ Read how to use [Shiny apps](http://shiny.rstudio.com/) before using this packag
         plotOutput("gaplot")
       )
     )
+    
+## Google Sheets via https://github.com/jennybc/gspreadr
+
+    ###### server.r
+    
+    library(shiny)
+    library(shinyga)
+    library(gspreadr)
+    
+    securityCode <- createCode()
+    
+    shinyServer(function(input, output, session) {
+    
+      auth <- doAuthMacro(input, output, session,
+                          securityCode,
+                          client.id     = "xxxxx.apps.googleusercontent.com",
+                          client.secret = "xxxxx",
+                          type = "gspreadr"
+                          )
+    
+      doc_data <- reactive({
+        validate(
+          need(auth$token(), "Authenticate")
+          )
+      
+        ## from gspreadr
+        list_sheets()
+      
+      })
+      
+      output$your_sheets <- renderDataTable({
+        validate(
+          need(doc_data(), "no data")
+          )
+          
+        doc_data()
+        
+        })
+        
+      })
+    
+    
+    ###### ui.r
+    library(shiny)
+    library(shinyga)
+    
+    shinyUI(fluidPage(
+    
+      titlePanel("gspreadr Demo"),
+      
+      sidebarLayout(
+        sidebarPanel(
+          uiOutput("AuthGAURL")
+          ),
+          
+      mainPanel(
+        dataTableOutput("your_sheets")
+        )
+      )
+      
+    ))
+    
 
