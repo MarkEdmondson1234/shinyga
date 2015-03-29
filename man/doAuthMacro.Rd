@@ -23,14 +23,23 @@ doAuthMacro(input, output, session, securityCode, client.id, client.secret,
 \item{type}{Type of Google Authentication. c("analytics", "gspreadr")}
 }
 \value{
+For gspreadr:
+
+
+For Analytics:
+
 A named list. See example for uses in shinyServer().
 \describe{
   \item{token}{Google Authentication Token needed for API calls.}
   \item{table}{Table of Google Analytics Profiles needed for \code{\link{rollupGA}}.}
 }
 
-The function will also create the outputs for the authentication menu.
-These are per the defaults of \code{\link{renderAuthDropdownRow}}
+It also outputs the link users need to click on to authenticate as output$AuthGAURL.
+Put this in your ui.r somewhere by using uiOutput("AuthGAURL")
+
+For Analytics, the function will also create the outputs for an authentication menu.
+The user needs to choose their Account, Web Property and View for the GA API to work.
+The menu outputs are per the defaults of \code{\link{renderAuthDropdownRow}}
 
 Also outputs a DataTable called 'output$GAProfile' for use in ui.r as renderDataTable('GAProfile')
 }
@@ -50,7 +59,7 @@ shinyServer(function(input, output, session)){
   auth <- doAuthMacro(input, output, session,
                       securityCode,
                       client.id     = "xxxxx.apps.googleusercontent.com",
-                      client.secret = "xxxxxxxxxxxx",
+                      client.secret = "xxxxxxxxxxxx"
                       )
 
   ga.token         <- auth$token
