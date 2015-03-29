@@ -45,17 +45,21 @@ Provides utility functions to help easily setup up a Google API authentication f
 
 Get your client secret, ID from the [Google API console](https://ga-dev-tools.appspot.com/explorer/)
 
-Activate Analytics API
-
-Fill in your app URL in crudentials box, get the client ID and client secret.
+* Create a Project
+* Go to APIs & Auth - Activate Analytics API
+* Go to APIs & Auth - Credentials
+* Create new Client ID for web application
+* Note your Client ID and Client secret
+* Put the URL of your app in the Redirect URIs, one per line. See below.
+* Fill in some details on your consent screen
 
 ### Client URL: Running Locally
-For local the Shiny runApp() uses a random port, so specify using runApp(port=1234) and put that in the Google API console as your port number e.g. 127.0.0.1:1234
+For local the Shiny runApp() uses a random port, so specify using runApp(port=1234) and put that in the Google API console as your port number e.g. http://127.0.0.1:1234
 
 ### Client URL: Running on Shiny Server or Shinyapps.io
-Use the URL where your app is published as your CLIENT_URL.  You can put both your local and live URL in the Google API console, and comment out the local one when you are ready to deploy.
+Use the URL where your app is published as your CLIENT_URL.  You can put both your local and live URL in the Google API console, and comment out the local one when you are ready to deploy. e.g. https://mark.shinyapps.io/ga-effect/
 
-If you use the doAuthMacro it will detect your app URL for you.
+If you use the doAuthMacro it will detect your app URL for you, otherwise you will need to specify it via the redirect.uri parameter in the authentication functions. 
 
 ## Run Shiny
 
