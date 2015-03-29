@@ -216,6 +216,7 @@ metricSelect  <- function(inputId="metric_choice"){
 #' @param input Shiny input object.
 #' @param output Shiny output object.
 #' @param session Shiny session object.
+#' @param type Type of Google Authentication. c("analytics", "gspreadr")
 #' 
 #' @return
 #' A named list. See example for uses in shinyServer().
@@ -269,7 +270,14 @@ metricSelect  <- function(inputId="metric_choice"){
 doAuthMacro <- function(input, output, session,
                         securityCode,
                         client.id,
-                        client.secret){
+                        client.secret,
+                        type = "analytics"){
+  
+  types <- list(analytics = c("https://www.googleapis.com/auth/analytics",
+                              "https://www.googleapis.com/auth/analytics.readonly"), 
+                gspreadr =  c("https://spreadsheets.google.com/feeds",
+                              "https://docs.google.com/feeds")
+  )
   
   ## get the apps URL as default
   appURL <- reactive({
@@ -294,13 +302,19 @@ doAuthMacro <- function(input, output, session,
   output$AuthGAURL <- renderUI({
     validate(
       need(appURL(), "AppURL")
-      )
+    )
     
-    a("Click Here to Authorise Your Google Analytics Access", 
+    a(paste0("Click here to authorise your Google ", 
+             type ,
+             " access"),
       href=shinygaGetTokenURL(securityCode,
                               client.id=client.id,
                               client.secret=client.secret,
-                              redirect.uri=appURL()))
+                              redirect.uri=appURL(),
+                              scope = types[type][[1]]
+      )
+    )
+    
   })
   
   AccessToken <- reactive({
@@ -312,46 +326,55 @@ doAuthMacro <- function(input, output, session,
                                     client.id=client.id,
                                     client.secret=client.secret,
                                     redirect.uri=appURL())
-    token <- access_token$access_token
+    #     token <- access_token$access_token
+    token <- access_token$token
   })
   
+  if(type == "analytics"){
+    
+    GAProfileTable <- reactive({
+      validate(
+        need(AccessToken(), "Authentication working...")
+      )
+      
+      AccountProfiles <- getAndMergeGAAccounts(AccessToken())
+      
+    })
+    
+    
+    output$GAProfile <- renderDataTable({
+      
+      ga <- GAProfileTable()[,c('name',
+                                'webPropertyId',
+                                'websiteUrl',
+                                'profilename', 
+                                'id')]
+      
+      names(ga) <- c('account', 
+                     'web property id',
+                     'website url',
+                     'view', 
+                     'view id')
+      
+      ga
+      
+    })
+    
+    renderAuthDropdownRow(GAProfileTable(),
+                          input,
+                          session)
+    
+    returnme <- list(table    = GAProfileTable,
+                     token    = AccessToken)
+  } else if(type == "gspreadr"){
+    
+    returnme <- list(token = AccessToken)
+  }
   
-  GAProfileTable <- reactive({
-    validate(
-      need(AccessToken(), "Authentication working...")
-    )
-    
-    AccountProfiles <- getAndMergeGAAccounts(AccessToken())
-    
-  })
-  
-  
-  output$GAProfile <- renderDataTable({
-    
-    ga <- GAProfileTable()[,c('name',
-                              'webPropertyId',
-                              'websiteUrl',
-                              'profilename', 
-                              'id')]
-    
-    names(ga) <- c('account', 
-                   'web property id',
-                   'website url',
-                   'view', 
-                   'view id')
-    
-    ga
-    
-  })
-  
-  renderAuthDropdownRow(GAProfileTable(),
-                        input,
-                        session)
-  
-  return(list(table    = GAProfileTable,
-              token    = AccessToken))
+  return(returnme)
   
 }
+
 
 #' Quick setup of shinyga segments
 #' 

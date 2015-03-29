@@ -4,7 +4,8 @@
 \alias{doAuthMacro}
 \title{Quick setup of shinyGA authentication}
 \usage{
-doAuthMacro(input, output, session, securityCode, client.id, client.secret)
+doAuthMacro(input, output, session, securityCode, client.id, client.secret,
+  type = "analytics")
 }
 \arguments{
 \item{input}{Shiny input object.}
@@ -18,6 +19,8 @@ doAuthMacro(input, output, session, securityCode, client.id, client.secret)
 \item{client.id}{The client ID taken from the Google API Console.}
 
 \item{client.secret}{The client secret taken from the Google API Console.}
+
+\item{type}{Type of Google Authentication. c("analytics", "gspreadr")}
 }
 \value{
 A named list. See example for uses in shinyServer().
