@@ -233,6 +233,10 @@ shinygaGetToken <- function(code,
   now <- as.numeric(Sys.time())
   token <- c(token.data, timestamp = c('first'=now, 'refresh'=now))
   
+  # environment to store credentials
+  .state <- new.env(parent = emptyenv())
+  .state$token <- token
+  
   return(token)
 }
 
