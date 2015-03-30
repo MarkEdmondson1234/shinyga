@@ -20,11 +20,12 @@ doAuthMacro(input, output, session, securityCode, client.id, client.secret,
 
 \item{client.secret}{The client secret taken from the Google API Console.}
 
-\item{type}{Type of Google Authentication. c("analytics", "gspreadr")}
+\item{type}{Type of Google Authentication. c("analytics", "googlesheets")}
 }
 \value{
-For gspreadr:
+For googlesheets:
 
+An authentication token, but not needed as token in environment.
 
 For Analytics:
 
@@ -59,7 +60,8 @@ shinyServer(function(input, output, session)){
   auth <- doAuthMacro(input, output, session,
                       securityCode,
                       client.id     = "xxxxx.apps.googleusercontent.com",
-                      client.secret = "xxxxxxxxxxxx"
+                      client.secret = "xxxxxxxxxxxx",
+                      type          = "analytics
                       )
 
   ga.token         <- auth$token
