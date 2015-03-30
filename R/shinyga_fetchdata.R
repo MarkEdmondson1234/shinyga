@@ -681,13 +681,16 @@ getAndMergeGAAccounts <- function(token){
   names(Accounts)    <- c("accountId","name","created","updated")
   names(Profiles)[4] <- "profilename"
   
-  AccountProfiles <- merge(Accounts,Profiles,by="accountId",all=TRUE)
+  AccountProfiles <- merge(Accounts,Profiles,by="accountId")
   
   AccountProfiles$name          <- as.character(AccountProfiles$name)
   AccountProfiles$webPropertyId <- as.character(AccountProfiles$webPropertyId)
   AccountProfiles$websiteUrl    <- as.character(AccountProfiles$websiteUrl)
   AccountProfiles$profilename   <- as.character(AccountProfiles$profilename)
   AccountProfiles$id            <- as.character(AccountProfiles$id)
+
+  ## remove NA ids as they may pass to rollupGA
+  AccountProfiles <- AccountProfiles[!is.na(AccountProfiles$id),]
   
   AccountProfiles
   

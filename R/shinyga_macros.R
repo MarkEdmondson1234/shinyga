@@ -344,7 +344,6 @@ doAuthMacro <- function(input, output, session,
                                     client.secret=client.secret,
                                     redirect.uri=appURL())
     token <- access_token$access_token
-#     token <- access_token$token
   })
   
   if(type == "analytics"){
