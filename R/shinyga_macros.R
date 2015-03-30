@@ -216,11 +216,12 @@ metricSelect  <- function(inputId="metric_choice"){
 #' @param input Shiny input object.
 #' @param output Shiny output object.
 #' @param session Shiny session object.
-#' @param type Type of Google Authentication. c("analytics", "gspreadr")
+#' @param type Type of Google Authentication. c("analytics", "googlesheets")
 #' 
 #' @return
-#' For gspreadr:
+#' For googlesheets:
 #' 
+#' An authentication token, but not needed as token in environment. 
 #' 
 #' For Analytics:
 #' 
@@ -256,7 +257,8 @@ metricSelect  <- function(inputId="metric_choice"){
 #'   auth <- doAuthMacro(input, output, session,
 #'                       securityCode,
 #'                       client.id     = "xxxxx.apps.googleusercontent.com",
-#'                       client.secret = "xxxxxxxxxxxx"
+#'                       client.secret = "xxxxxxxxxxxx",
+#'                       type          = "analytics
 #'                       )
 #'                       
 #'   ga.token         <- auth$token
@@ -282,10 +284,10 @@ doAuthMacro <- function(input, output, session,
                         client.secret,
                         type = "analytics"){
   
-  types <- list(analytics = c("https://www.googleapis.com/auth/analytics",
-                              "https://www.googleapis.com/auth/analytics.readonly"), 
-                gspreadr =  c("https://spreadsheets.google.com/feeds",
-                              "https://docs.google.com/feeds")
+  types <- list(analytics   =  c("https://www.googleapis.com/auth/analytics",
+                                 "https://www.googleapis.com/auth/analytics.readonly"), 
+                googlesheets = c("https://spreadsheets.google.com/feeds",
+                                 "https://docs.google.com/feeds")
   )
   
   ## get the apps URL as default
@@ -315,7 +317,7 @@ doAuthMacro <- function(input, output, session,
     
     if(type == "analytics") {
       linkname <- "Analytics"
-    } else if(type == "gspreadr"){
+    } else if(type == "googlesheets"){
       linkname <- "Sheets"
     } else {
       linkname <- ""
@@ -382,7 +384,7 @@ doAuthMacro <- function(input, output, session,
     
     returnme <- list(table    = GAProfileTable,
                      token    = AccessToken)
-  } else if(type == "gspreadr"){
+  } else if(type == "googlesheets"){
     
     returnme <- list(token = AccessToken)
   }
