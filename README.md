@@ -18,7 +18,7 @@ Call via the 'type="googlesheets"' in doAuthMacro()
                           securityCode,
                           client.id     = "xxxxx.apps.googleusercontent.com",
                           client.secret = "xxxxx",
-                          type = "gspreadr"
+                          type = "googlesheets"
                           )
 
 If you don't specify type then it defaults to Google Analytics. ("analytics"). Doing Analytics renders the GA account dropdowns etc.  This is not needed for Google Sheets.
@@ -171,13 +171,13 @@ Examples of minimal working examples are shown below, for you to adapt.
       )
     )
     
-## Google Sheets via gspreadr package
+## Google Sheets via googlesheets package
 
     ###### server.r
     
     library(shiny)
     library(shinyga)
-    library(gspreadr)
+    library(googlesheets)
     
     securityCode <- createCode()
     
