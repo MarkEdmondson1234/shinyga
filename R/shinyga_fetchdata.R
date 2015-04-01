@@ -135,9 +135,7 @@ shinygaGetGoals = function(token,
                                  'name', 
                                  'value', 
                                  'active', 
-                                 'type', 
-                                 'created', 
-                                 'updated')))
+                                 'type')))
 }
 
 #' Get GA Segments
@@ -161,7 +159,7 @@ shinygaGetSegments = function(token, start=1, max=1000) {
                '&max-results=', max,
                sep='', collapse='')
   
-  keepme <- c('id', 'segmentId', 'name', 'definition', 'created', 'updated')
+  keepme <- c('id', 'segmentId', 'name', 'definition')
   pmd <- processManagementData(url, keepme)
   
   if(all(names(pmd) %in% keepme)){

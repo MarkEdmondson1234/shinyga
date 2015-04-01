@@ -10,6 +10,7 @@ The functions in the package were used to help create these demo apps:
 
 ## Change history
 ### Version 0.1.2 - March 29th 2015
+* Fixed bug where older GA accounts couldn't fetch segments or goals.
 * Support for Google Sheets via Jennifer Bryan's [googlesheets](https://github.com/jennybc/googlesheets) package.  
 
 Call via the 'type="googlesheets"' in doAuthMacro()
