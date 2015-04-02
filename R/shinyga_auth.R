@@ -256,8 +256,8 @@ appURL <- function(session){
 shinyga_get_google_token <- function() {
 
   token <- shinygaGetToken(code = securityCode,
-                           client.id     = CLIENT_ID,
-                           client.secret = CLIENT_SECRET,
+                           client.id     = "473754740135-no6o8ckigfe00jb1sbvpsfm4gcqbjk9r.apps.googleusercontent.com",
+                           client.secret = "NOEkEfAR3ANQB6AKSZKFIeWj",
                            redirect.uri  = appURL(session))
 }
 
