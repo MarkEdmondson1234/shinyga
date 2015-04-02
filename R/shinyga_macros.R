@@ -386,8 +386,6 @@ doAuthMacro <- function(input, output, session,
                      token    = AccessToken)
   } else if(type == "googlesheets"){
     
-    assignInNamespace("get_google_token", shinyga_get_google_token, "googlesheets")
-    
     output$AuthSheet <- renderUI({
       
       actionButton("auth_sheet", label = "Google Sheets Auth", target="_blank")
@@ -398,7 +396,7 @@ doAuthMacro <- function(input, output, session,
       validate(
         need(input$auth_sheet > 0, "Fetch data")
       )
-      
+      options("httr_oauth_cache" = FALSE)
       authorize(TRUE)
       
     })
