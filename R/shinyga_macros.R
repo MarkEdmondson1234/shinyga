@@ -388,7 +388,9 @@ doAuthMacro <- function(input, output, session,
     
     output$AuthSheet <- renderUI({
       
-      actionButton("auth_sheet", label = "Google Sheets Auth", target="_blank")
+      actionButton("auth_sheet", 
+                   label = "Google Sheets Auth", 
+                   target="_blank")
       
     })
     
@@ -400,9 +402,9 @@ doAuthMacro <- function(input, output, session,
       options("httr_oauth_cache" = FALSE,
               "httr_oob_default" = appURL())
       
-      message("httr_oob_default: ", getOption("httr_oob_default"))
-      message("httr_oauth_cache: ", as.character(getOption("httr_oauth_cache")))
-      
+#       message("httr_oob_default: ", getOption("httr_oob_default"))
+#       message("httr_oauth_cache: ", as.character(getOption("httr_oauth_cache")))
+#       
       authorize()
       
     })
