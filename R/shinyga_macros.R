@@ -400,6 +400,8 @@ doAuthMacro <- function(input, output, session,
       options("httr_oauth_cache" = FALSE,
               "httr_oob_default" = appURL())
       
+      message("httr_oob_default: ", getOption("httr_oob_default"))
+      
       authorize()
       
     })
