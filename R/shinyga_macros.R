@@ -386,6 +386,11 @@ doAuthMacro <- function(input, output, session,
                      token    = AccessToken)
   } else if(type == "googlesheets"){
     
+      if(file.exists(".httr-oauth")) {
+        message("Removing old credentials ...")
+        file.remove(".httr-oauth")
+      }
+      
     returnme <- list(token = AccessToken)
   }
   
