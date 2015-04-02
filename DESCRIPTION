@@ -1,7 +1,7 @@
 Package: shinyga
 Type: Package
-Title: Easier Google Analytics Dashboards in Shiny
-Version: 0.1.1
+Title: Easier Google Authentication in Shiny
+Version: 0.1.2
 Date: 2015-03-07
 Author: person("Mark", "Edmondson", email = "shinyga@markedmondson.me", role = c("aut", cre))
 Maintainer: Mark Edmondson <shinyga@markedmondson.me>
@@ -13,6 +13,7 @@ Imports:
     shiny (>= 0.11.1),
     shinydashboard (>= 0.2.2), 
     stringr (>= 0.6.2),
-    Rcpp (>= 0.11.5)
+    Rcpp (>= 0.11.5),
+    googlesheets (>= 0.1.1)
     
     

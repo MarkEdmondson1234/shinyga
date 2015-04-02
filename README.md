@@ -1,9 +1,29 @@
 # shinyga (Shiny Google Authentication)
 Easier Google Authentication Dashboards in Shiny.
 
-The functions in the package were used to help create the [GA Effect dashboard](http://markedmondson.me/how-i-made-ga-effect-creating-an-online-statistics-dashboard-using-reais)
+The functions in the package were used to help create these demo apps:
+
+* [GA Effect dashboard](http://markedmondson.me/how-i-made-ga-effect-creating-an-online-statistics-dashboard-using-reais)
+* [GA Rollup dashboard](https://mark.shinyapps.io/ga-rollup/)
+
+**Get in touch if you have any dashboards made with this package to get a link from here**
 
 ## Change history
+### Version 0.1.2 - March 29th 2015
+* Fixed bug where older GA accounts couldn't fetch segments or goals.
+* Support for Google Sheets via Jennifer Bryan's [googlesheets](https://github.com/jennybc/googlesheets) package.  
+
+Call via the 'type="googlesheets"' in doAuthMacro()
+
+      auth <- doAuthMacro(input, output, session,
+                          securityCode,
+                          client.id     = "xxxxx.apps.googleusercontent.com",
+                          client.secret = "xxxxx",
+                          type = "googlesheets"
+                          )
+
+If you don't specify type then it defaults to Google Analytics. ("analytics"). Doing Analytics renders the GA account dropdowns etc.  This is not needed for Google Sheets.
+
 ### Version 0.1.1 - March 27th 2015
 * Port everything to httr, get rid of RCurl, RJSONIO 
 * Segments will default to default GA ones if it can't find or parse yours
@@ -46,8 +66,8 @@ Provides utility functions to help easily setup up a Google API authentication f
 Get your client secret, ID from the [Google API console](https://ga-dev-tools.appspot.com/explorer/)
 
 * Create a Project
-* Go to APIs & Auth - Activate Analytics API
-* Go to APIs & Auth - Credentials
+* Go to APIs & Auth - Activate the appropriate Google API (only necessary for Analytics atm)
+* Go to APIs & Auth - Credentials.
 * Create new Client ID for web application
 * Note your Client ID and Client secret
 * Put the URL of your app in the Redirect URIs, one per line. See below.
@@ -57,15 +77,23 @@ Get your client secret, ID from the [Google API console](https://ga-dev-tools.ap
 For local the Shiny runApp() uses a random port, so specify using runApp(port=1234) and put that in the Google API console as your port number e.g. http://127.0.0.1:1234
 
 ### Client URL: Running on Shiny Server or Shinyapps.io
-Use the URL where your app is published as your CLIENT_URL.  You can put both your local and live URL in the Google API console, and comment out the local one when you are ready to deploy. e.g. https://mark.shinyapps.io/ga-effect/
+If you use the doAuthMacro() functions it will detect your app URL for you, otherwise you will need to specify it via the redirect.uri parameter in the underlying authentication functions. 
 
-If you use the doAuthMacro it will detect your app URL for you, otherwise you will need to specify it via the redirect.uri parameter in the authentication functions. 
+Use the URL where your app is published as your CLIENT_URL.  You can put both your local and live URL in the Google API console. 
+
+TIP: Comment out the local one when you are ready to deploy. e.g. https://mark.shinyapps.io/ga-effect/
 
 ## Run Shiny
 
-Read how to use [Shiny apps](http://shiny.rstudio.com/) before using this package.
+Read how to use [Shiny apps](http://shiny.rstudio.com/) before using this package.  
 
-# Example Shiny App Code
+This package also uses [shinydashboard](http://rstudio.github.io/shinydashboard/) to make the pretty layout, but its not strictly necessary.
+
+# Shiny App Code Examples
+
+Examples of minimal working examples are shown below, for you to adapt. 
+
+## Google Analytics
  
     ###### server.r
     
@@ -82,7 +110,8 @@ Read how to use [Shiny apps](http://shiny.rstudio.com/) before using this packag
                           securityCode,
                           ## client info taken from Google API console.
                           client.id     = "xxxxx.apps.googleusercontent.com",
-                          client.secret = "xxxxxxxxxxxx")
+                          client.secret = "xxxxxxxxxxxx",
+                          type = "analytics")
   
       ## auth returns auth$table() and auth$token() to be used in API calls.
   
@@ -142,4 +171,64 @@ Read how to use [Shiny apps](http://shiny.rstudio.com/) before using this packag
         plotOutput("gaplot")
       )
     )
+    
+## Google Sheets via googlesheets package
 
+    ###### server.r
+    
+    library(shiny)
+    library(shinyga)
+    library(googlesheets)
+    
+    securityCode <- createCode()
+    
+    shinyServer(function(input, output, session) {
+    
+      auth <- doAuthMacro(input, output, session,
+                          securityCode,
+                          client.id     = "xxxxx.apps.googleusercontent.com",
+                          client.secret = "xxxxx",
+                          type = "gspreadr"
+                          )
+    
+      doc_data <- reactive({
+        validate(
+          need(auth$token(), "Authenticate")
+          )
+      
+        ## from gspreadr
+        list_sheets()
+      
+      })
+      
+      output$your_sheets <- renderDataTable({
+        validate(
+          need(doc_data(), "no data")
+          )
+          
+        doc_data()
+        
+        })
+        
+      })
+    
+    
+    ###### ui.r
+    library(shiny)
+    library(shinyga)
+    
+    shinyUI(fluidPage(
+    
+      titlePanel("gspreadr Demo"),
+      
+      sidebarLayout(
+        sidebarPanel(
+          uiOutput("AuthGAURL")
+          ),
+          
+      mainPanel(
+        dataTableOutput("your_sheets")
+        )
+      )
+      
+    ))

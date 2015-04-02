@@ -135,9 +135,7 @@ shinygaGetGoals = function(token,
                                  'name', 
                                  'value', 
                                  'active', 
-                                 'type', 
-                                 'created', 
-                                 'updated')))
+                                 'type')))
 }
 
 #' Get GA Segments
@@ -161,7 +159,7 @@ shinygaGetSegments = function(token, start=1, max=1000) {
                '&max-results=', max,
                sep='', collapse='')
   
-  keepme <- c('id', 'segmentId', 'name', 'definition', 'created', 'updated')
+  keepme <- c('id', 'segmentId', 'name', 'definition')
   pmd <- processManagementData(url, keepme)
   
   if(all(names(pmd) %in% keepme)){
@@ -681,13 +679,16 @@ getAndMergeGAAccounts <- function(token){
   names(Accounts)    <- c("accountId","name","created","updated")
   names(Profiles)[4] <- "profilename"
   
-  AccountProfiles <- merge(Accounts,Profiles,by="accountId",all=TRUE)
+  AccountProfiles <- merge(Accounts,Profiles,by="accountId")
   
   AccountProfiles$name          <- as.character(AccountProfiles$name)
   AccountProfiles$webPropertyId <- as.character(AccountProfiles$webPropertyId)
   AccountProfiles$websiteUrl    <- as.character(AccountProfiles$websiteUrl)
   AccountProfiles$profilename   <- as.character(AccountProfiles$profilename)
   AccountProfiles$id            <- as.character(AccountProfiles$id)
+
+  ## remove NA ids as they may pass to rollupGA
+  AccountProfiles <- AccountProfiles[!is.na(AccountProfiles$id),]
   
   AccountProfiles
   

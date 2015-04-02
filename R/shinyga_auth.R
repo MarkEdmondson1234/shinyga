@@ -210,16 +210,6 @@ shinygaGetToken <- function(code,
                             client.secret = CLIENT_SECRET,
                             redirect.uri  = CLIENT_URL){
   
-#   opts <- list(verbose = FALSE);
-#   raw.data <- RCurl::postForm('https://accounts.google.com/o/oauth2/token',
-#                               .opts = opts,
-#                               code = code,
-#                               client_id = client.id,
-#                               client_secret = client.secret,
-#                               redirect_uri = redirect.uri,
-#                               grant_type = 'authorization_code',
-#                               style = 'POST')
-  
   raw.data <- httr::POST('https://accounts.google.com/o/oauth2/token',
                          encode = "form",
                          body = list(code = code,
@@ -230,8 +220,12 @@ shinygaGetToken <- function(code,
                          )
   
   token.data <- httr::content(raw.data)
-  now <- as.numeric(Sys.time())
-  token <- c(token.data, timestamp = c('first'=now, 'refresh'=now))
+  now        <- as.numeric(Sys.time())
+  token      <- c(token.data, timestamp = c('first'=now, 'refresh'=now))
+  
+  # environment to store credentials
+  .state <- new.env(parent = emptyenv())
+  .state$token <- token
   
   return(token)
 }
