@@ -227,6 +227,9 @@ shinygaGetToken <- function(code,
   .state <- new.env(parent = emptyenv())
   .state$token <- token
   
+  warning("Token:", token)
+  warning("state token:", .state$token)
+  
   return(token)
 }
 
