@@ -386,9 +386,15 @@ doAuthMacro <- function(input, output, session,
                      token    = AccessToken)
   } else if(type == "googlesheets"){
     
-    authorize(TRUE)
+    output$AuthSheet <- renderUI({
       
-    returnme <- list(token = AccessToken)
+        actionButton("auth_sheet", label = "Google Sheets Auth")
+      
+      })
+    
+    observeEvent(input$auth_sheet, 
+                 authorize(TRUE),
+                 label = "sheetAuth")
   }
   
   return(returnme)
