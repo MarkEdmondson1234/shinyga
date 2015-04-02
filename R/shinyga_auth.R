@@ -226,10 +226,38 @@ shinygaGetToken <- function(code,
   # environment to store credentials
   .state <- new.env(parent = emptyenv())
   .state$token <- token
-  
-  warning("Token:", token)
-  warning("state token:", .state$token)
-  
+
   return(token)
+}
+
+#' Retrieve Shiny URL
+#'
+#' Get token if it's previously stored, else prompt user to get one.
+#' @param session The session object
+#'
+#' @keywords internal
+appURL <- function(session){
+  
+  paste0(session$clientData$url_protocol,
+         "//",
+         session$clientData$url_hostname,
+         ifelse(session$clientData$url_hostname == "127.0.0.1",
+                ":",
+                session$clientData$url_pathname),
+         session$clientData$url_port)
+  
+}
+
+#' Retrieve Google token from environment shinyga stylee
+#'
+#' Get token if it's previously stored, else prompt user to get one.
+#'
+#' @keywords internal
+shinyga_get_google_token <- function() {
+
+  token <- shinygaGetToken(code = securityCode,
+                           client.id     = CLIENT_ID,
+                           client.secret = CLIENT_SECRET,
+                           redirect.uri  = appURL(session))
 }
 
