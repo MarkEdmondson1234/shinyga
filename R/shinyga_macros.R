@@ -395,6 +395,8 @@ doAuthMacro <- function(input, output, session,
     eventReactive(input$auth_sheet > 0, 
                   authorize(TRUE),
                   label = "sheetAuth")
+    
+    returnme <- NA
   }
   
   return(returnme)
