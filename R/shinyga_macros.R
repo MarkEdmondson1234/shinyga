@@ -400,11 +400,11 @@ doAuthMacro <- function(input, output, session,
       )
       
       options("httr_oauth_cache" = FALSE,
-              "httr_oob_default" = appURL())
+              "httr_oob_default" = TRUE)
       
-#       message("httr_oob_default: ", getOption("httr_oob_default"))
-#       message("httr_oauth_cache: ", as.character(getOption("httr_oauth_cache")))
-#       
+      message("httr_oob_default: ", getOption("httr_oob_default"))
+      message("httr_oauth_cache: ", as.character(getOption("httr_oauth_cache")))
+      
       authorize()
       
     })
