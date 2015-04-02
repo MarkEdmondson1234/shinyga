@@ -230,21 +230,3 @@ shinygaGetToken <- function(code,
   return(token)
 }
 
-#' Retrieve Shiny URL
-#'
-#' Get token if it's previously stored, else prompt user to get one.
-#' @param session The session object
-#'
-#' @keywords internal
-appURL <- function(session){
-  
-  paste0(session$clientData$url_protocol,
-         "//",
-         session$clientData$url_hostname,
-         ifelse(session$clientData$url_hostname == "127.0.0.1",
-                ":",
-                session$clientData$url_pathname),
-         session$clientData$url_port)
-  
-}
-

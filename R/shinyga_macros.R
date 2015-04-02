@@ -396,8 +396,11 @@ doAuthMacro <- function(input, output, session,
       validate(
         need(input$auth_sheet > 0, "Fetch data")
       )
-      options("httr_oauth_cache" = FALSE)
-      authorize(TRUE)
+      
+      options("httr_oauth_cache" = FALSE,
+              "httr_oob_default" = appURL())
+      
+      authorize()
       
     })
     
