@@ -392,9 +392,9 @@ doAuthMacro <- function(input, output, session,
       
       })
     
-    observeEvent(input$auth_sheet == 0, 
-                    authorize(TRUE),
-                    label = "sheetAuth")
+    eventReactive(input$auth_sheet > 0, 
+                  authorize(TRUE),
+                  label = "sheetAuth")
     
     returnme <- NA
   }
