@@ -386,7 +386,7 @@ doAuthMacro <- function(input, output, session,
                      token    = AccessToken)
   } else if(type == "googlesheets"){
     
-    assignInMyNamespace("get_google_token", shinyga_get_google_token)
+    assignInNamespace("get_google_token", shinyga_get_google_token, "googlesheets")
     
     output$AuthSheet <- renderUI({
       
