@@ -388,13 +388,18 @@ doAuthMacro <- function(input, output, session,
     
     output$AuthSheet <- renderUI({
       
-        actionButton("auth_sheet", label = "Google Sheets Auth")
+      actionButton("auth_sheet", label = "Google Sheets Auth", target="_blank")
       
-      })
+    })
     
-    eventReactive(input$auth_sheet > 0, 
-                  authorize(TRUE),
-                  label = "sheetAuth")
+    observe({
+      validate(
+        need(input$auth_sheet > 0, "Fetch data")
+      )
+      
+      authorize(TRUE)
+      
+    })
     
     returnme <- NA
   }
