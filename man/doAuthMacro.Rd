@@ -4,8 +4,7 @@
 \alias{doAuthMacro}
 \title{Quick setup of shinyGA authentication}
 \usage{
-doAuthMacro(input, output, session, securityCode, client.id, client.secret,
-  type = "analytics")
+doAuthMacro(input, output, session, securityCode, client.id, client.secret)
 }
 \arguments{
 \item{input}{Shiny input object.}
@@ -19,28 +18,16 @@ doAuthMacro(input, output, session, securityCode, client.id, client.secret,
 \item{client.id}{The client ID taken from the Google API Console.}
 
 \item{client.secret}{The client secret taken from the Google API Console.}
-
-\item{type}{Type of Google Authentication. c("analytics", "googlesheets")}
 }
 \value{
-For googlesheets:
-
-An authentication token, but not needed as token in environment.
-
-For Analytics:
-
 A named list. See example for uses in shinyServer().
 \describe{
   \item{token}{Google Authentication Token needed for API calls.}
   \item{table}{Table of Google Analytics Profiles needed for \code{\link{rollupGA}}.}
 }
 
-It also outputs the link users need to click on to authenticate as output$AuthGAURL.
-Put this in your ui.r somewhere by using uiOutput("AuthGAURL")
-
-For Analytics, the function will also create the outputs for an authentication menu.
-The user needs to choose their Account, Web Property and View for the GA API to work.
-The menu outputs are per the defaults of \code{\link{renderAuthDropdownRow}}
+The function will also create the outputs for the authentication menu.
+These are per the defaults of \code{\link{renderAuthDropdownRow}}
 
 Also outputs a DataTable called 'output$GAProfile' for use in ui.r as renderDataTable('GAProfile')
 }
@@ -61,7 +48,6 @@ shinyServer(function(input, output, session)){
                       securityCode,
                       client.id     = "xxxxx.apps.googleusercontent.com",
                       client.secret = "xxxxxxxxxxxx",
-                      type          = "analytics
                       )
 
   ga.token         <- auth$token
