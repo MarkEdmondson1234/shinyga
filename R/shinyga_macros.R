@@ -403,7 +403,7 @@ doAuthMacro <- function(input, output, session,
       message("httr_oob_default: ", getOption("httr_oob_default"))
       message("httr_oauth_cache: ", as.character(getOption("httr_oauth_cache")))
       
-      authorize(TRUE)
+      authorize()
       
     })
     
