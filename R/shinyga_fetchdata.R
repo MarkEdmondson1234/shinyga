@@ -126,7 +126,7 @@ shinygaGetFilters = function(token,
                '&max-results=', max,
                sep='', collapse='')
   
-  return(processManagementData(url, 
+  return(processManagementData2(url, 
                                c('id', 
                                  'accountId', 
                                  'webPropertyId', 
@@ -271,6 +271,50 @@ shinygaGetSegments = function(token, start=1, max=1000) {
   }
 }
 
+#' Take GA API output and parses it into data.frame test
+#' 
+#' Internal function for returning a dataframe from API response
+#' 
+#' @param url The GA API response URL.
+#' @param keep Which colums to keep.
+#' @return A dataframe of GA data.
+#' @family fetch data functions
+#' @examples
+#' \dontrun{
+#' shinygaGetSegments = function(token, start=1, max=1000) {
+#' url <- paste('https://www.googleapis.com/analytics/v3/management/segments',
+#'              '?access_token=', token,
+#'              '&start-index=', start,
+#'              '&max-results=', max,
+#'              sep='', collapse='')
+#'              
+#'              return(processManagementData(url, 
+#'                     c('id', 'segmentId', 'name', 'definition', 'created', 'updated')))
+#'                     }
+#'}
+processManagementData2 = function(url, keep) {
+  
+  ga.json <- httr::content(httr::GET(url))
+  
+  return(ga.json)
+  
+  if (is.null(ga.json)) { stop('data fetching did not output correct format') }
+  if (!is.null(ga.json$error$message)) {stop("JSON fetch error: ",ga.json$error$message)}
+  
+  # build data frame
+  # get observation with the most columns (this will define the data frame):
+  max <- ga.json$items[sapply(ga.json$items, length) == max(sapply(ga.json$items, length))][1]
+  n <- names(as.data.frame(do.call(rbind, max)))
+  
+  df <- as.data.frame(do.call(rbind, 
+                              lapply(lapply(ga.json$items, unlist), 
+                                     "[", 
+                                     unique(unlist(c(sapply(ga.json$items,names))))
+                              )
+  ))
+  names(df) <- n
+  return(df[keep])
+}
 
 #' Take GA API output and parses it into data.frame
 #' 
@@ -297,9 +341,7 @@ processManagementData = function(url, keep) {
   
   ga.json <- httr::content(httr::GET(url))
   
-  if (is.null(ga.json)) { stop('data fetching did not output correct format'); }
-  #     if (!is.null(ga.json$error$message)) {stop('Error fetching GA Data: ',
-  #                                                ga.json$error$message, keep)}
+  if (is.null(ga.json)) { stop('data fetching did not output correct format') }
   if (!is.null(ga.json$error$message)) {stop("JSON fetch error: ",ga.json$error$message)}
   
   # build data frame
