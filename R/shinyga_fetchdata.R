@@ -366,12 +366,12 @@ processManagementData = function(url, keep) {
     df <- jsonlite::flatten(ga.json$items)
   }
 
-  if(all(keep %in% n)) {
+  if(all(keep %in% names(df))) {
     return(df[keep])    
   } else {
     warning("Requested columns to keep not found in return dataframe. \n
             Keep:", keep, 
-            "\n Found: ", n, 
+            "\n Found: ", names(df), 
             "\n Returning all dataframe columns instead.")
     return(df)
   }
