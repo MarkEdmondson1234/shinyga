@@ -300,7 +300,7 @@ processManagementData = function(url, keep) {
   if (is.null(ga.json)) { stop('data fetching did not output correct format'); }
   #     if (!is.null(ga.json$error$message)) {stop('Error fetching GA Data: ',
   #                                                ga.json$error$message, keep)}
-  if (!is.null(ga.json$error$message)) {stop('...Loading')}
+  if (!is.null(ga.json$error$message)) {stop("JSON fetch error: ",ga.json$error$message)}
   
   # build data frame
   # get observation with the most columns (this will define the data frame):
