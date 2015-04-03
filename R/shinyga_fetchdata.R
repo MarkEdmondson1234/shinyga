@@ -126,7 +126,7 @@ shinygaGetFilters = function(token,
                '&max-results=', max,
                sep='', collapse='')
   
-  return(processManagementData2(url, 
+  return(processManagementData(url, 
                                c('id', 
                                  'accountId', 
                                  'webPropertyId', 
