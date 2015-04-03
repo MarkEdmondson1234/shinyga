@@ -347,36 +347,31 @@ processManagementData = function(url, keep) {
     stop('JSON fetch error: Bad request - 400. Fetched: ', url)
   }
   
-#   # build data frame
-#   # get observation with the most columns (this will define the data frame):
-#   max <- ga.json$items[sapply(ga.json$items, length) == max(sapply(ga.json$items, length))][1]
-#   n <- names(as.data.frame(do.call(rbind, max)))
-#   
-#   df <- as.data.frame(do.call(rbind, 
-#                               lapply(lapply(ga.json$items, unlist), 
-#                                      "[", 
-#                                      unique(unlist(c(sapply(ga.json$items,names))))
-#                                      )
-#                               ))
-#   names(df) <- n
-  
-  warning("ga.json",
-          ga.json)
-
-  warning("is.data.frame(ga.json$items)",is.data.frame(ga.json$items))
-
   if(is.data.frame(ga.json$items)){
     df <- jsonlite::flatten(ga.json$items)
+    n <- names(df)
   } else {
-    df  <- data.frame()
+    # build data frame
+    # get observation with the most columns (this will define the data frame):
+    max <- ga.json$items[sapply(ga.json$items, length) == max(sapply(ga.json$items, length))][1]
+    n <- names(as.data.frame(do.call(rbind, max)))
+    
+    df <- as.data.frame(do.call(rbind, 
+                                lapply(lapply(ga.json$items, unlist), 
+                                       "[", 
+                                       unique(unlist(c(sapply(ga.json$items,names))))
+                                )))
+    names(df) <- n 
   }
+  
+  
 
-  if(all(keep %in% names(df))) {
+  if(all(keep %in% n)) {
     return(df[keep])    
   } else {
     warning("Requested columns to keep not found in return dataframe.
             \n Keep:", keep, 
-            "\n Found: ", names(df), 
+            "\n Found: ", n, 
             "\n Returning all dataframe columns instead.")
     return(df)
   }
