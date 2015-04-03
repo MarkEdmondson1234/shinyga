@@ -360,8 +360,10 @@ processManagementData = function(url, keep) {
 #                               ))
 #   names(df) <- n
 
-  df <- jsonlite::flatten(ga.json$items)
-  
+  if(is.data.frame(ga.json$items)){
+    df <- jsonlite::flatten(ga.json$items)
+  }
+
   if(all(keep %in% n)) {
     return(df[keep])    
   } else {
