@@ -339,8 +339,6 @@ processManagementData2 = function(url, keep) {
 #'}
 processManagementData = function(url, keep) {
   
-  if(is.null(url)) {return(NULL)}
-  
   ga.json <- httr::content(httr::GET(url))
   
   if (is.null(ga.json)) { stop('data fetching did not output correct format') }
@@ -361,16 +359,23 @@ processManagementData = function(url, keep) {
 #                                      )
 #                               ))
 #   names(df) <- n
+  
+  warning("ga.json",
+          ga.json)
+
+  warning("is.data.frame(ga.json$items)",is.data.frame(ga.json$items))
 
   if(is.data.frame(ga.json$items)){
     df <- jsonlite::flatten(ga.json$items)
+  } else {
+    df  <- data.frame()
   }
 
   if(all(keep %in% names(df))) {
     return(df[keep])    
   } else {
-    warning("Requested columns to keep not found in return dataframe. \n
-            Keep:", keep, 
+    warning("Requested columns to keep not found in return dataframe.
+            \n Keep:", keep, 
             "\n Found: ", names(df), 
             "\n Returning all dataframe columns instead.")
     return(df)
