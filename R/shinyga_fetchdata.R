@@ -343,6 +343,9 @@ processManagementData = function(url, keep) {
   
   if (is.null(ga.json)) { stop('data fetching did not output correct format') }
   if (!is.null(ga.json$error$message)) {stop("JSON fetch error: ",ga.json$error$message)}
+  if (grepl("Error 400 (Bad Request)",ga.json)) {
+    stop('JSON fetch error: Bad request - 400. Fetched: ', url)
+  }
   
   # build data frame
   # get observation with the most columns (this will define the data frame):
