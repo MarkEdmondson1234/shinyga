@@ -96,6 +96,51 @@ shinygaGetProfiles = function(token,
                                  'updated')))
 }
 
+#' Get GA Filters
+#' 
+#' Gets the Filters available for each account.
+#' 
+#' @param token Token passed from shinygaGetToken()
+#' @param accountId AccountId of webproperty
+#' @param webPropertyId webPropertyId, or all of them with ~all
+#' @param profileId profileId (ViewId), or all of them with ~all
+#' @param max Maximum number to fetch
+#' @return If token exists, a dataframe of filters for the account.
+#' @family fetch data functions
+#' @examples
+#' \dontrun{
+#' Views <- shinygaGetGoals(123456)
+#' }
+shinygaGetFilters = function(token, 
+                             accountId, 
+                             webPropertyId = '~all', 
+                             profileId = '~all', 
+                             start=1, 
+                             max=1000) { 
+  url <- paste('https://www.googleapis.com/analytics/v3/management/accounts/', accountId, 
+               '/webproperties/', webPropertyId , 
+               '/profiles/', profileId, 
+               '/profileFilterLinks',
+               '?access_token=', token,
+               '&start-index=', start,
+               '&max-results=', max,
+               sep='', collapse='')
+  
+  return(processManagementData(url, 
+                               c('id',
+                                 'filterRef.name',
+                                 'rank',
+                                 'filterRef.id',
+                                 'profileRef.name',
+                                 'profileRef.id',
+                                 'profileRef.accountId', 
+                                 'profileRef.webPropertyId', 
+                                 'profileRef.internalWebPropertyId'
+                                 )
+                               )
+         )
+}
+
 #' Get GA Goals
 #' 
 #' Gets the Goals available from the user token.
@@ -231,7 +276,6 @@ shinygaGetSegments = function(token, start=1, max=1000) {
   }
 }
 
-
 #' Take GA API output and parses it into data.frame
 #' 
 #' Internal function for returning a dataframe from API response
@@ -255,27 +299,33 @@ shinygaGetSegments = function(token, start=1, max=1000) {
 #'}
 processManagementData = function(url, keep) {
   
-  ga.json <- httr::content(httr::GET(url))
+  ga.json <- httr::content(httr::GET(url), as = "text", type = "application/json")
+  ga.json <- jsonlite::fromJSON(ga.json)
   
-  if (is.null(ga.json)) { stop('data fetching did not output correct format'); }
-  #     if (!is.null(ga.json$error$message)) {stop('Error fetching GA Data: ',
-  #                                                ga.json$error$message, keep)}
-  if (!is.null(ga.json$error$message)) {stop('...Loading')}
+  if (is.null(ga.json)) { stop('data fetching did not output correct format') }
+  if (!is.null(ga.json$error$message)) {stop("JSON fetch error: ",ga.json$error$message)}
+  if (grepl("Error 400 (Bad Request)",ga.json[[1]])) {
+    stop('JSON fetch error: Bad request URL - 400. Fetched: ', url)
+  }
   
-  # build data frame
-  # get observation with the most columns (this will define the data frame):
-  max <- ga.json$items[sapply(ga.json$items, length) == max(sapply(ga.json$items, length))][1]
-  n <- names(as.data.frame(do.call(rbind, max)))
+  if(is.data.frame(ga.json$items)){
+    df <- jsonlite::flatten(ga.json$items)
+  } else {
+    stop("is.data.frame(ga.json$items was false \n ",
+            ga.json$items)
+  }
   
-  df <- as.data.frame(do.call(rbind, 
-                              lapply(lapply(ga.json$items, unlist), 
-                                     "[", 
-                                     unique(unlist(c(sapply(ga.json$items,names))))
-                                     )
-                              ))
-  names(df) <- n
-  cat(nrow(df))
-  return(df[keep])
+
+  if(all(keep %in% names(df))) {
+    return(df[keep])    
+  } else {
+    warning("Requested columns to keep not found in return dataframe.
+            \n Keep:", keep, 
+            "\n Found: ", names(df), 
+            "\n Returning all dataframe columns instead.")
+    return(df)
+  }
+
 }
 
 #' rollupGA - get GA data from multiple Views

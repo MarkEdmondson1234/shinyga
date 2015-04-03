@@ -10,6 +10,10 @@ The functions in the package were used to help create these demo apps:
 
 ## Change history
 
+### Dev version
+* Integrating googlesheets authentication
+* Fetching and modfying GA filters
+
 ### Version 0.1.1 - March 27th 2015
 * Fixed bug where older GA accounts couldn't fetch segments or goals.
 * Port everything to httr, get rid of RCurl, RJSONIO 

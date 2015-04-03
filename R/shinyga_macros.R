@@ -358,19 +358,7 @@ doAuthMacro <- function(input, output, session,
     
     output$GAProfile <- renderDataTable({
       
-      ga <- GAProfileTable()[,c('name',
-                                'webPropertyId',
-                                'websiteUrl',
-                                'profilename', 
-                                'id')]
-      
-      names(ga) <- c('account', 
-                     'web property id',
-                     'website url',
-                     'view', 
-                     'view id')
-      
-      ga
+      ga <- GAProfileTable()
       
     })
     
