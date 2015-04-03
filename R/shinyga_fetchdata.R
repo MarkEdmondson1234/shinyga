@@ -351,6 +351,8 @@ processManagementData = function(url, keep) {
     df <- jsonlite::flatten(ga.json$items)
     n <- names(df)
   } else {
+    warning("is.data.frame(ga.json$items was false \n ",
+            ga.json$items)
     # build data frame
     # get observation with the most columns (this will define the data frame):
     max <- ga.json$items[sapply(ga.json$items, length) == max(sapply(ga.json$items, length))][1]
