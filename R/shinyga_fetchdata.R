@@ -96,6 +96,46 @@ shinygaGetProfiles = function(token,
                                  'updated')))
 }
 
+#' Get GA Filters
+#' 
+#' Gets the Filters available for each account.
+#' 
+#' @param token Token passed from shinygaGetToken()
+#' @param accountId AccountId of webproperty
+#' @param webPropertyId webPropertyId, or all of them with ~all
+#' @param profileId profileId (ViewId), or all of them with ~all
+#' @param max Maximum number to fetch
+#' @return If token exists, a dataframe of filters for the account.
+#' @family fetch data functions
+#' @examples
+#' \dontrun{
+#' Views <- shinygaGetGoals(123456)
+#' }
+shinygaGetFilters = function(token, 
+                             accountId, 
+                             webPropertyId = '~all', 
+                             profileId = '~all', 
+                             start=1, 
+                             max=1000) { 
+  url <- paste('https://www.googleapis.com/analytics/v3/management/accounts/', accountId, 
+               '/webproperties/', webPropertyId , 
+               '/profiles/', profileId, 
+               '/profileFilterLinks',
+               '?access_token=', token,
+               '&start-index=', start,
+               '&max-results=', max,
+               sep='', collapse='')
+  
+  return(processManagementData(url, 
+                               c('id', 
+                                 'accountId', 
+                                 'webPropertyId', 
+                                 'profileId', 
+                                 'name')
+                               )
+         )
+}
+
 #' Get GA Goals
 #' 
 #' Gets the Goals available from the user token.
@@ -274,7 +314,6 @@ processManagementData = function(url, keep) {
                                      )
                               ))
   names(df) <- n
-  cat(nrow(df))
   return(df[keep])
 }
 
