@@ -339,7 +339,7 @@ processManagementData2 = function(url, keep) {
 #'}
 processManagementData = function(url, keep) {
   
-  ga.json <- httr::content(httr::GET(url), type = "application/json")
+  ga.json <- httr::content(httr::GET(url), as = "parsed", type = "application/json")
   
   if (is.null(ga.json)) { stop('data fetching did not output correct format') }
   if (!is.null(ga.json$error$message)) {stop("JSON fetch error: ",ga.json$error$message)}
