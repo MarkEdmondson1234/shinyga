@@ -216,16 +216,23 @@ metricSelect  <- function(inputId="metric_choice"){
 #' @param input Shiny input object.
 #' @param output Shiny output object.
 #' @param session Shiny session object.
+#' @param type Type of Google Authentication. c("analytics")
 #' 
 #' @return
+#' For Analytics:
+#' 
 #' A named list. See example for uses in shinyServer().
 #' \describe{
 #'   \item{token}{Google Authentication Token needed for API calls.}
 #'   \item{table}{Table of Google Analytics Profiles needed for \code{\link{rollupGA}}.}
 #' }
 #' 
-#' The function will also create the outputs for the authentication menu.
-#' These are per the defaults of \code{\link{renderAuthDropdownRow}}
+#' It also outputs the link users need to click on to authenticate as output$AuthGAURL. 
+#' Put this in your ui.r somewhere by using uiOutput("AuthGAURL")
+#' 
+#' For Analytics, the function will also create the outputs for an authentication menu.
+#' The user needs to choose their Account, Web Property and View for the GA API to work.
+#' The menu outputs are per the defaults of \code{\link{renderAuthDropdownRow}}
 #' 
 #' Also outputs a DataTable called 'output$GAProfile' for use in ui.r as renderDataTable('GAProfile')
 #' 
@@ -247,6 +254,7 @@ metricSelect  <- function(inputId="metric_choice"){
 #'                       securityCode,
 #'                       client.id     = "xxxxx.apps.googleusercontent.com",
 #'                       client.secret = "xxxxxxxxxxxx",
+#'                       type          = "analytics"
 #'                       )
 #'                       
 #'   ga.token         <- auth$token
@@ -269,7 +277,14 @@ metricSelect  <- function(inputId="metric_choice"){
 doAuthMacro <- function(input, output, session,
                         securityCode,
                         client.id,
-                        client.secret){
+                        client.secret,
+                        type = "analytics"){
+  
+  types <- list(analytics   =  c("https://www.googleapis.com/auth/analytics",
+                                 "https://www.googleapis.com/auth/analytics.readonly"), 
+                googlesheets = c("https://spreadsheets.google.com/feeds",
+                                 "https://docs.google.com/feeds")
+  )
   
   ## get the apps URL as default
   appURL <- reactive({
@@ -294,13 +309,27 @@ doAuthMacro <- function(input, output, session,
   output$AuthGAURL <- renderUI({
     validate(
       need(appURL(), "AppURL")
-      )
+    )
     
-    a("Click Here to Authorise Your Google Analytics Access", 
+    if(type == "analytics") {
+      linkname <- "Analytics"
+    } else if(type == "googlesheets"){
+      linkname <- "Sheets"
+    } else {
+      linkname <- ""
+    }
+    
+    a(paste0("Click here to authorise your Google ", 
+             linkname ,
+             " access"),
       href=shinygaGetTokenURL(securityCode,
                               client.id=client.id,
                               client.secret=client.secret,
-                              redirect.uri=appURL()))
+                              redirect.uri=appURL(),
+                              scope = types[type][[1]]
+      )
+    )
+    
   })
   
   AccessToken <- reactive({
@@ -315,43 +344,51 @@ doAuthMacro <- function(input, output, session,
     token <- access_token$access_token
   })
   
+  if(type == "analytics"){
+    
+    GAProfileTable <- reactive({
+      validate(
+        need(AccessToken(), "Authentication working...")
+      )
+      
+      AccountProfiles <- getAndMergeGAAccounts(AccessToken())
+      
+    })
+    
+    
+    output$GAProfile <- renderDataTable({
+      
+      ga <- GAProfileTable()[,c('name',
+                                'webPropertyId',
+                                'websiteUrl',
+                                'profilename', 
+                                'id')]
+      
+      names(ga) <- c('account', 
+                     'web property id',
+                     'website url',
+                     'view', 
+                     'view id')
+      
+      ga
+      
+    })
+    
+    renderAuthDropdownRow(GAProfileTable(),
+                          input,
+                          session)
+    
+    returnme <- list(table    = GAProfileTable,
+                     token    = AccessToken)
+  } else if(type == "googlesheets"){
+    
+    returnme <- list(token = AccessToken)
+  }
   
-  GAProfileTable <- reactive({
-    validate(
-      need(AccessToken(), "Authentication working...")
-    )
-    
-    AccountProfiles <- getAndMergeGAAccounts(AccessToken())
-    
-  })
-  
-  
-  output$GAProfile <- renderDataTable({
-    
-    ga <- GAProfileTable()[,c('name',
-                              'webPropertyId',
-                              'websiteUrl',
-                              'profilename', 
-                              'id')]
-    
-    names(ga) <- c('account', 
-                   'web property id',
-                   'website url',
-                   'view', 
-                   'view id')
-    
-    ga
-    
-  })
-  
-  renderAuthDropdownRow(GAProfileTable(),
-                        input,
-                        session)
-  
-  return(list(table    = GAProfileTable,
-              token    = AccessToken))
+  return(returnme)
   
 }
+
 
 #' Quick setup of shinyga segments
 #' 
