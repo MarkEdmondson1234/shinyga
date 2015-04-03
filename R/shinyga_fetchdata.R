@@ -343,7 +343,7 @@ processManagementData = function(url, keep) {
   
   if (is.null(ga.json)) { stop('data fetching did not output correct format') }
   if (!is.null(ga.json$error$message)) {stop("JSON fetch error: ",ga.json$error$message)}
-  if (grepl("Error 400 (Bad Request)",ga.json)) {
+  if (grepl("Error 400 (Bad Request)",ga.json[[1]])) {
     stop('JSON fetch error: Bad request - 400. Fetched: ', url)
   }
   
@@ -359,7 +359,15 @@ processManagementData = function(url, keep) {
                                      )
                               ))
   names(df) <- n
-  return(df[keep])
+  
+  if(keep %in% n) {
+    return(df[keep])    
+  } else {
+    warning("keep columns not in return dataframe. Keep:", keep)
+    warning("returning what was returned, but use caution in using ")
+    return(df)
+  }
+
 }
 
 #' rollupGA - get GA data from multiple Views
