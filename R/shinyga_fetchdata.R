@@ -339,7 +339,7 @@ processManagementData2 = function(url, keep) {
 #'}
 processManagementData = function(url, keep) {
   
-  if(is.null(url)) {return NULL}
+  if(is.null(url)) {return(NULL)}
   
   ga.json <- httr::content(httr::GET(url))
   
