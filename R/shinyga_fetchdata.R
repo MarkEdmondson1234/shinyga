@@ -347,24 +347,28 @@ processManagementData = function(url, keep) {
     stop('JSON fetch error: Bad request - 400. Fetched: ', url)
   }
   
-  # build data frame
-  # get observation with the most columns (this will define the data frame):
-  max <- ga.json$items[sapply(ga.json$items, length) == max(sapply(ga.json$items, length))][1]
-  n <- names(as.data.frame(do.call(rbind, max)))
-  
-  df <- as.data.frame(do.call(rbind, 
-                              lapply(lapply(ga.json$items, unlist), 
-                                     "[", 
-                                     unique(unlist(c(sapply(ga.json$items,names))))
-                                     )
-                              ))
-  names(df) <- n
+#   # build data frame
+#   # get observation with the most columns (this will define the data frame):
+#   max <- ga.json$items[sapply(ga.json$items, length) == max(sapply(ga.json$items, length))][1]
+#   n <- names(as.data.frame(do.call(rbind, max)))
+#   
+#   df <- as.data.frame(do.call(rbind, 
+#                               lapply(lapply(ga.json$items, unlist), 
+#                                      "[", 
+#                                      unique(unlist(c(sapply(ga.json$items,names))))
+#                                      )
+#                               ))
+#   names(df) <- n
+
+  df <- flatten(ga.json$items)
   
   if(all(keep %in% n)) {
     return(df[keep])    
   } else {
-    warning("keep columns not in return dataframe. Keep:", keep)
-    warning("returning what was returned, but use caution in using ")
+    warning("Requested columns to keep not found in return dataframe. \n
+            Keep:", keep, 
+            "\n Found: ", n, 
+            "\n Returning all dataframe columns instead.")
     return(df)
   }
 
