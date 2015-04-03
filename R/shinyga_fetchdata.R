@@ -360,7 +360,7 @@ processManagementData = function(url, keep) {
                               ))
   names(df) <- n
   
-  if(keep %in% n) {
+  if(all(keep %in% n)) {
     return(df[keep])    
   } else {
     warning("keep columns not in return dataframe. Keep:", keep)
