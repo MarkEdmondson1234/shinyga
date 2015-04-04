@@ -168,21 +168,22 @@ shinygaGetAdWords = function(token,
                '&max-results=', max)
   
   ## the adWordsAccounts is a little untidy with "analytics#adWordsAccount, 178-280-7367, TRUE"
-  warning("Fetching: ", url)
+  keep <- c('id',
+            'entity.webPropertyRef.id',
+            'entity.webPropertyRef.name',
+            'entity.webPropertyRef.accountId',
+            'adWordsAccounts', 
+            'name',
+            'profileIds'
+  )
   
-  aw <- processManagementData(url, 
-                              c('id',
-                                'entity.webPropertyRef.id',
-                                'entity.webPropertyRef.name',
-                                'entity.webPropertyRef.accountId',
-                                'adWordsAccounts', 
-                                'name',
-                                'profileIds'
-                              ))
+  aw <- processManagementData(url, keep)
 
-  ## todo: processing of untidy adWordsAccounts column
+  ##processing of untidy adWordsAccounts column
+  extra <- unlist(lapply(adwords$adWordsAccounts, jsonlite::flatten))
+  cbind(aw, extra)
   
-  return(aw)
+  return(cbind(aw, extra))
 }
 
 #' Get GA Goals
