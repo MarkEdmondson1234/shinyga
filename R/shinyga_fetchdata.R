@@ -141,6 +141,50 @@ shinygaGetFilters = function(token,
          )
 }
 
+#' Get GA AdWords links
+#' 
+#' Gets the AdWord links available for each web property.
+#' 
+#' @param token Token passed from shinygaGetToken()
+#' @param accountId AccountId of webproperty
+#' @param webPropertyId webPropertyId
+#' @param max Maximum number to fetch
+#' @return If token exists, a dataframe of filters for the account.
+#' @family fetch data functions
+#' @examples
+#' \dontrun{
+#' Views <- shinygaGetGoals(123456)
+#' }
+shinygaGetAdWords = function(token, 
+                             accountId, 
+                             webPropertyId,
+                             start=1, 
+                             max=1000) { 
+  url <- paste('https://www.googleapis.com/analytics/v3/management/accounts/', accountId, 
+               '/webproperties/', webPropertyId, 
+               '/entityAdWordsLinks',
+               '?access_token=', token,
+               '&start-index=', start,
+               '&max-results=', max,
+               sep='', collapse='')
+  
+  ## the adWordsAccounts is a little untidy with "analytics#adWordsAccount, 178-280-7367, TRUE"
+  
+  aw <- processManagementData(url, 
+                              c('id',
+                                'entity.webPropertyRef.id',
+                                'entity.webPropertyRef.name',
+                                'entity.webPropertyRef.accountId',
+                                'adWordsAccounts', 
+                                'name',
+                                'profileIds'
+                              ))
+
+  ## todo: processing of untidy adWordsAccounts column
+  
+  return(aw)
+}
+
 #' Get GA Goals
 #' 
 #' Gets the Goals available from the user token.
