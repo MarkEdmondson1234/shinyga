@@ -28,7 +28,8 @@ Accounts <- shinygaGetAccounts(123456)
 Other fetch data functions: \code{\link{MEgetData}};
   \code{\link{getAndMergeGAAccounts}};
   \code{\link{processManagementData}};
-  \code{\link{rollupGA}}; \code{\link{shinygaGetFilters}};
+  \code{\link{rollupGA}}; \code{\link{shinygaGetAdWords}};
+  \code{\link{shinygaGetFilters}};
   \code{\link{shinygaGetGoals}};
   \code{\link{shinygaGetProfiles}};
   \code{\link{shinygaGetSegments}};

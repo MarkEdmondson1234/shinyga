@@ -160,15 +160,15 @@ shinygaGetAdWords = function(token,
                              webPropertyId,
                              start=1, 
                              max=1000) { 
-  url <- paste('https://www.googleapis.com/analytics/v3/management/accounts/', accountId, 
+  url <- paste0('https://www.googleapis.com/analytics/v3/management/accounts/', accountId, 
                '/webproperties/', webPropertyId, 
                '/entityAdWordsLinks',
                '?access_token=', token,
                '&start-index=', start,
-               '&max-results=', max,
-               sep='', collapse='')
+               '&max-results=', max)
   
   ## the adWordsAccounts is a little untidy with "analytics#adWordsAccount, 178-280-7367, TRUE"
+  warning("Fetching: ", url)
   
   aw <- processManagementData(url, 
                               c('id',
