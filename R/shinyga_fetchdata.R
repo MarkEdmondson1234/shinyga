@@ -278,6 +278,50 @@ shinygaGetCustomMetrics = function(token,
   return(aw)
 }
 
+#' Get GA customDataSources
+#' 
+#' Gets the Custom Metrics available for each web property.
+#' 
+#' @param token Token passed from shinygaGetToken()
+#' @param accountId AccountId of webproperty
+#' @param webPropertyId webPropertyId
+#' @param max Maximum number to fetch
+#' @return If token exists, a dataframe of filters for the account.
+#' @family fetch data functions
+#' @examples
+#' \dontrun{
+#' ds <- shinygaGetCustomDataSources(123456)
+#' }
+shinygaGetCustomDataSources = function(token, 
+                                   accountId, 
+                                   webPropertyId,
+                                   start=1, 
+                                   max=1000) { 
+  url <- paste0('https://www.googleapis.com/analytics/v3/management/accounts/', accountId, 
+                '/webproperties/', webPropertyId, 
+                '/customDataSources',
+                '?access_token=', token,
+                '&start-index=', start,
+                '&max-results=', max)
+  
+  keep <- c('id',
+            'name',
+            'description',
+            'uploadType',
+            'importBehavior',
+            'type',
+            'created',
+            'updated',
+            'accountId',
+            'webPropertyId'
+  )
+  
+  aw <- processManagementData(url, 
+                              keep)
+  
+  return(aw)
+}
+
 
 #' Get GA Goals
 #' 
