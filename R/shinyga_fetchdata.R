@@ -185,7 +185,7 @@ shinygaGetAdWords = function(token,
   ## remove adWordsAccounts column
   aw <- aw[,setdiff(names(aw), c("adWordsAccounts"))]
   
-  return(awc)
+  return(aw)
 }
 
 #' Get GA Goals
