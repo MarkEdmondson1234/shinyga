@@ -181,7 +181,9 @@ shinygaGetAdWords = function(token,
                               keep)
 
   ## processing of untidy adWordsAccounts column
-  awc <- cbind(aw, Reduce(rbind, aw$adWordsAccounts))
+  aw <- cbind(aw, Reduce(rbind, aw$adWordsAccounts))
+  ## remove adWordsAccounts column
+  aw <- aw[,setdiff(names(aw), c("adWordsAccounts"))]
   
   return(awc)
 }
