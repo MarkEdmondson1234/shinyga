@@ -167,7 +167,7 @@ shinygaGetAdWords = function(token,
                '&start-index=', start,
                '&max-results=', max)
   
-  ## the adWordsAccounts is a little untidy with "analytics#adWordsAccount, 178-280-7367, TRUE"
+  ## the adWordsAccounts is a little untidy with schema "analytics#adWordsAccount, 178-280-7367, TRUE"
   keep <- c('id',
             'entity.webPropertyRef.id',
             'entity.webPropertyRef.name',
@@ -180,7 +180,8 @@ shinygaGetAdWords = function(token,
   aw <- processManagementData(url, 
                               keep)
 
-  ## todo: processing of untidy adWordsAccounts column
+  ## processing of untidy adWordsAccounts column
+  awc <- cbind(aw, Reduce(rbind, aw$adWordsAccounts))
   
   return(aw)
 }
