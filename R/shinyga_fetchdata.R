@@ -183,7 +183,7 @@ shinygaGetAdWords = function(token,
   ## processing of untidy adWordsAccounts column
   awc <- cbind(aw, Reduce(rbind, aw$adWordsAccounts))
   
-  return(aw)
+  return(awc)
 }
 
 #' Get GA Goals
