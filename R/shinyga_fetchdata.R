@@ -177,13 +177,12 @@ shinygaGetAdWords = function(token,
             'profileIds'
   )
   
-  aw <- processManagementData(url, keep)
+  aw <- processManagementData(url, 
+                              keep)
 
-  ##processing of untidy adWordsAccounts column
-  extra <- unlist(lapply(adwords$adWordsAccounts, jsonlite::flatten))
-  cbind(aw, extra)
+  ## todo: processing of untidy adWordsAccounts column
   
-  return(cbind(aw, extra))
+  return(aw)
 }
 
 #' Get GA Goals
