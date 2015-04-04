@@ -255,7 +255,7 @@ shinygaGetCustomMetrics = function(token,
                                    max=1000) { 
   url <- paste0('https://www.googleapis.com/analytics/v3/management/accounts/', accountId, 
                 '/webproperties/', webPropertyId, 
-                '/customDimensions',
+                '/customMetrics',
                 '?access_token=', token,
                 '&start-index=', start,
                 '&max-results=', max)
