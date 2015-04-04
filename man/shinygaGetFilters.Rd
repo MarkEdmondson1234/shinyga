@@ -26,7 +26,7 @@ Gets the Filters available for each account.
 }
 \examples{
 \dontrun{
-Views <- shinygaGetGoals(123456)
+filters <- shinygaGetFilters(123456)
 }
 }
 \seealso{
@@ -35,6 +35,8 @@ Other fetch data functions: \code{\link{MEgetData}};
   \code{\link{processManagementData}};
   \code{\link{rollupGA}}; \code{\link{shinygaGetAccounts}};
   \code{\link{shinygaGetAdWords}};
+  \code{\link{shinygaGetCustomDimensions}};
+  \code{\link{shinygaGetCustomMetrics}};
   \code{\link{shinygaGetGoals}};
   \code{\link{shinygaGetProfiles}};
   \code{\link{shinygaGetSegments}};

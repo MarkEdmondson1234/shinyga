@@ -109,7 +109,7 @@ shinygaGetProfiles = function(token,
 #' @family fetch data functions
 #' @examples
 #' \dontrun{
-#' Views <- shinygaGetGoals(123456)
+#' filters <- shinygaGetFilters(123456)
 #' }
 shinygaGetFilters = function(token, 
                              accountId, 
@@ -153,7 +153,7 @@ shinygaGetFilters = function(token,
 #' @family fetch data functions
 #' @examples
 #' \dontrun{
-#' Views <- shinygaGetGoals(123456)
+#' aw <- shinygaGetAdWords(123456)
 #' }
 shinygaGetAdWords = function(token, 
                              accountId, 
@@ -183,10 +183,101 @@ shinygaGetAdWords = function(token,
   ## processing of untidy adWordsAccounts column
   aw <- cbind(aw, Reduce(rbind, aw$adWordsAccounts))
   ## remove adWordsAccounts column
-  aw <- aw[,setdiff(names(aw), c("adWordsAccounts"))]
+  aw <- aw[,setdiff(names(aw), c("adWordsAccounts", "kind"))]
   
   return(aw)
 }
+
+#' Get GA customDimensions
+#' 
+#' Gets the Custom Dimensions available for each web property.
+#' 
+#' @param token Token passed from shinygaGetToken()
+#' @param accountId AccountId of webproperty
+#' @param webPropertyId webPropertyId
+#' @param max Maximum number to fetch
+#' @return If token exists, a dataframe of filters for the account.
+#' @family fetch data functions
+#' @examples
+#' \dontrun{
+#' dims <- shinygaGetCustomDimensions(123456)
+#' }
+shinygaGetCustomDimensions = function(token, 
+                             accountId, 
+                             webPropertyId,
+                             start=1, 
+                             max=1000) { 
+  url <- paste0('https://www.googleapis.com/analytics/v3/management/accounts/', accountId, 
+                '/webproperties/', webPropertyId, 
+                '/customDimensions',
+                '?access_token=', token,
+                '&start-index=', start,
+                '&max-results=', max)
+  
+  keep <- c('id',
+            'name',
+            'index',
+            'scope',
+            'active',
+            'created',
+            'updated',
+            'accountId',
+            'webPropertyId'
+  )
+  
+  aw <- processManagementData(url, 
+                              keep)
+  
+  ## to make it easier to rbind with customMetrics
+  aw$type <- "customDimension"
+  
+  return(aw)
+}
+
+#' Get GA customMetrics
+#' 
+#' Gets the Custom Metrics available for each web property.
+#' 
+#' @param token Token passed from shinygaGetToken()
+#' @param accountId AccountId of webproperty
+#' @param webPropertyId webPropertyId
+#' @param max Maximum number to fetch
+#' @return If token exists, a dataframe of filters for the account.
+#' @family fetch data functions
+#' @examples
+#' \dontrun{
+#' metrics <- shinygaGetCustomMetrics(123456)
+#' }
+shinygaGetCustomMetrics = function(token, 
+                                   accountId, 
+                                   webPropertyId,
+                                   start=1, 
+                                   max=1000) { 
+  url <- paste0('https://www.googleapis.com/analytics/v3/management/accounts/', accountId, 
+                '/webproperties/', webPropertyId, 
+                '/customDimensions',
+                '?access_token=', token,
+                '&start-index=', start,
+                '&max-results=', max)
+  
+  keep <- c('id',
+            'name',
+            'index',
+            'scope',
+            'active',
+            'type',
+            'created',
+            'updated',
+            'accountId',
+            'webPropertyId'
+  )
+  
+  aw <- processManagementData(url, 
+                              keep)
+  
+  return(aw)
+}
+
 
 #' Get GA Goals
 #' 

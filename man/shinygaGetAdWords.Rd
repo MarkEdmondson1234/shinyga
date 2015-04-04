@@ -23,7 +23,7 @@ Gets the AdWord links available for each web property.
 }
 \examples{
 \dontrun{
-Views <- shinygaGetGoals(123456)
+aw <- shinygaGetAdWords(123456)
 }
 }
 \seealso{
@@ -31,6 +31,8 @@ Other fetch data functions: \code{\link{MEgetData}};
   \code{\link{getAndMergeGAAccounts}};
   \code{\link{processManagementData}};
   \code{\link{rollupGA}}; \code{\link{shinygaGetAccounts}};
+  \code{\link{shinygaGetCustomDimensions}};
+  \code{\link{shinygaGetCustomMetrics}};
   \code{\link{shinygaGetFilters}};
   \code{\link{shinygaGetGoals}};
   \code{\link{shinygaGetProfiles}};
