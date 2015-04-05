@@ -503,13 +503,18 @@ processManagementData = function(url, keep) {
     stop('JSON fetch error: Bad request URL - 400. Fetched: ', url)
   }
   
-  if(is.data.frame(ga.json$items)){
-    df <- jsonlite::flatten(ga.json$items)
+  if(length(ga.json$items) > 0){
+    if(is.data.frame(ga.json$items)){
+      df <- jsonlite::flatten(ga.json$items)
+    } else {
+      stop("is.data.frame(ga.json$items) was false \n ",
+           ga.json$items)
+    }
   } else {
-    stop("is.data.frame(ga.json$items was false \n ",
-            ga.json$items)
+    warning("ga.json$items was empty")
+    df <- data.frame(matrix(ncol=length(keep), nrow=0))
+    names(df) <- keep
   }
-  
 
   if(all(keep %in% names(df))) {
     return(df[keep])    
