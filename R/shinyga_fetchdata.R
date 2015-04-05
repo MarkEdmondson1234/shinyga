@@ -167,7 +167,7 @@ shinygaGetAdWords = function(token,
                '&start-index=', start,
                '&max-results=', max)
   
-  ## the adWordsAccounts is a little untidy with schema "analytics#adWordsAccount, 178-280-7367, TRUE"
+
   keep <- c('id',
             'entity.webPropertyRef.id',
             'entity.webPropertyRef.name',
@@ -180,16 +180,24 @@ shinygaGetAdWords = function(token,
   aw <- processManagementData(url, 
                               keep)
   
-  if(!is.null(aw$adWordsAccounts)){
-    ## processing of untidy adWordsAccounts column
-    aw <- cbind(aw, Reduce(rbind, aw$adWordsAccounts))
-    ## remove adWordsAccounts column
-    aw <- aw[,setdiff(names(aw), c("adWordsAccounts", "kind"))]
-  } else {
-    aw <- aw[,names(aw) %in% keep]
-    aw$customerId <- 'None'
-    aw$autoTaggingEnabled <- FALSE
-  }
+  ## the adWordsAccounts is a little untidy
+  ## schema "analytics#adWordsAccount, 178-280-7367, TRUE"
+  ## and multiple adword entites per accountId
+  ## processing of untidy adWordsAccounts column
+  
+  # to keep name for merge later
+  names(aw$adWordsAccounts) <- aw$id
+  manytoOne <- Reduce(rbind, aw$adWordsAccounts)
+  #get name of adwords id for merge
+  cv <- unlist(lapply(aw$adWordsAccounts, nrow))
+  manytoOne$id <- rep(names(cv), cv)
+  
+  # merge with initial aw table
+  aw <- merge(aw, manytoOne )
+  
+  ## remove adWordsAccounts and kind column
+  aw <- aw[,setdiff(names(aw), c("adWordsAccounts", "kind"))]
+
   return(aw)
 }
 
