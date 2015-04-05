@@ -504,7 +504,7 @@ processManagementData = function(url, keep) {
     warning("Requested columns to keep not found in return dataframe.
             \n Keep:", keep, 
             "\n Found: ", names(df), 
-            "\n Diffs:", setdiff(names(aw), keep),
+            "\n Diffs:", setdiff(names(df), keep),
             "\n Returning all dataframe columns instead.")
     return(df)
   }
