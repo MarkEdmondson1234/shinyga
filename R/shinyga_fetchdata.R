@@ -513,7 +513,6 @@ processManagementData = function(url, keep) {
            ga.json$items)
     }
   } else {
-    warning("ga.json$items was empty")
     df <- data.frame(matrix(ncol=length(keep), nrow=0))
     names(df) <- keep
   }
