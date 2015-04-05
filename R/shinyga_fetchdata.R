@@ -242,7 +242,9 @@ shinygaGetCustomDimensions = function(token,
                               keep)
   
   ## to make it easier to rbind with customMetrics
-  aw$type <- "customDimension"
+  if(nrow(aw) > 0){
+    aw$type <- "customDimension"
+  }
   
   return(aw)
 }
