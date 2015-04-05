@@ -179,12 +179,17 @@ shinygaGetAdWords = function(token,
   
   aw <- processManagementData(url, 
                               keep)
-
-  ## processing of untidy adWordsAccounts column
-  aw <- cbind(aw, Reduce(rbind, aw$adWordsAccounts))
-  ## remove adWordsAccounts column
-  aw <- aw[,setdiff(names(aw), c("adWordsAccounts", "kind"))]
   
+  if(!is.null(aw$adWordsAccounts)){
+    ## processing of untidy adWordsAccounts column
+    aw <- cbind(aw, Reduce(rbind, aw$adWordsAccounts))
+    ## remove adWordsAccounts column
+    aw <- aw[,setdiff(names(aw), c("adWordsAccounts", "kind"))]
+  } else {
+    aw <- aw[,names(aw) %in% keep]
+    aw$customerId <- 'None'
+    aw$autoTaggingEnabled <- FALSE
+  }
   return(aw)
 }
 
