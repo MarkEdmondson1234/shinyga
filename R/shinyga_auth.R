@@ -146,7 +146,8 @@ shinygaGetTokenURL <-
            client.secret = CLIENT_SECRET,
            redirect.uri  = CLIENT_URL,
            scope         = c("https://www.googleapis.com/auth/analytics",
-                             "https://www.googleapis.com/auth/analytics.readonly")) {
+                             "https://www.googleapis.com/auth/analytics.readonly",
+                             "https://www.googleapis.com/auth/analytics.manage.users.readonly")) {
     
   scopeEnc <- sapply(scope, URLencode, reserved=TRUE)
   scopeEnc <- paste(scopeEnc, sep='', collapse='+')

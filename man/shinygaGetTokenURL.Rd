@@ -7,7 +7,8 @@
 shinygaGetTokenURL(state, client.id = CLIENT_ID,
   client.secret = CLIENT_SECRET, redirect.uri = CLIENT_URL,
   scope = c("https://www.googleapis.com/auth/analytics",
-  "https://www.googleapis.com/auth/analytics.readonly"))
+  "https://www.googleapis.com/auth/analytics.readonly",
+  "https://www.googleapis.com/auth/analytics.manage.users.readonly"))
 }
 \arguments{
 \item{state}{A string you pass to check authentication is correct.}

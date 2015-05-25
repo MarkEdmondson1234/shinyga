@@ -141,6 +141,43 @@ shinygaGetFilters = function(token,
          )
 }
 
+#' Get GA Users
+#' 
+#' Gets the User permissions for each account
+#' 
+#' @param token Token passed from shinygaGetToken()
+#' @param accountId AccountId of webproperty
+#' @param max Maximum number to fetch
+#' @return If token exists, a dataframe of user permissions for the account.
+#' @family fetch data functions
+#' @examples
+#' \dontrun{
+#' aw <- shinygaGetUsers(123456)
+#' }
+shinygaGetUsers = function(token, 
+                             accountId, 
+                             start=1, 
+                             max=1000) { 
+  url <- paste0('https://www.googleapis.com/analytics/v3/management/accounts/', accountId, 
+                '/entityUserLinks',
+                '?access_token=', token,
+                '&start-index=', start,
+                '&max-results=', max)
+  
+  
+  keep <- c('id',
+            'entity.accountRef.id',
+            'entity.accountRef.name',
+            'userRef.email',
+            'permissions.effective'
+  )
+  
+  aw <- processManagementData(url, 
+                              keep)
+  
+  return(aw)
+}
+
 #' Get GA AdWords links
 #' 
 #' Gets the AdWord links available for each web property.
