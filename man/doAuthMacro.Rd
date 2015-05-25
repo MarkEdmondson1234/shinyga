@@ -5,7 +5,7 @@
 \title{Quick setup of shinyGA authentication}
 \usage{
 doAuthMacro(input, output, session, securityCode, client.id, client.secret,
-  type = "analytics")
+  type = "analytics", customScopes = NULL)
 }
 \arguments{
 \item{input}{Shiny input object.}
@@ -20,7 +20,9 @@ doAuthMacro(input, output, session, securityCode, client.id, client.secret,
 
 \item{client.secret}{The client secret taken from the Google API Console.}
 
-\item{type}{Type of Google Authentication. c("analytics")}
+\item{type}{Type of Google Authentication. c("analytics").}
+
+\item{customScopes}{If not NULL, then a chacter vector of Google scopes to authenticate.}
 }
 \value{
 For Analytics:
