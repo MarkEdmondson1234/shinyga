@@ -155,9 +155,9 @@ shinygaGetFilters = function(token,
 #' aw <- shinygaGetUsers(123456)
 #' }
 shinygaGetUsers = function(token, 
-                             accountId, 
-                             start=1, 
-                             max=1000) { 
+                           accountId, 
+                           start=1, 
+                           max=1000) { 
   url <- paste0('https://www.googleapis.com/analytics/v3/management/accounts/', accountId, 
                 '/entityUserLinks',
                 '?access_token=', token,
