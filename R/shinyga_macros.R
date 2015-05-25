@@ -352,7 +352,7 @@ doAuthMacro <- function(input, output, session,
     token <- access_token$access_token
   })
   
-  if(type == "analytics"){
+  if(type == "analytics" | type == "custom"){
     
     GAProfileTable <- reactive({
       validate(
