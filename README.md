@@ -12,7 +12,10 @@ The functions in the package were used to help create these demo apps:
 
 ### Dev version
 * Integrating googlesheets authentication
-* Fetching and modfying GA filters
+* GA users.
+
+### Version 0.1.2 - May 25th 2015
+* Added GA filters, custom metrics, Adwords API listings
 
 ### Version 0.1.1 - March 27th 2015
 * Fixed bug where older GA accounts couldn't fetch segments or goals.
