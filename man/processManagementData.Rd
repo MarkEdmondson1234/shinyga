@@ -35,6 +35,9 @@ url <- paste('https://www.googleapis.com/analytics/v3/management/segments',
 Other fetch data functions: \code{\link{MEgetData}};
   \code{\link{getAndMergeGAAccounts}};
   \code{\link{rollupGA}}; \code{\link{shinygaGetAccounts}};
+  \code{\link{shinygaGetAdWords}};
+  \code{\link{shinygaGetCustomDimensions}};
+  \code{\link{shinygaGetCustomMetrics}};
   \code{\link{shinygaGetFilters}};
   \code{\link{shinygaGetGoals}};
   \code{\link{shinygaGetProfiles}};

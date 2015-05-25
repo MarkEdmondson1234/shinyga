@@ -109,7 +109,7 @@ shinygaGetProfiles = function(token,
 #' @family fetch data functions
 #' @examples
 #' \dontrun{
-#' Views <- shinygaGetGoals(123456)
+#' filters <- shinygaGetFilters(123456)
 #' }
 shinygaGetFilters = function(token, 
                              accountId, 
@@ -140,6 +140,203 @@ shinygaGetFilters = function(token,
                                )
          )
 }
+
+#' Get GA AdWords links
+#' 
+#' Gets the AdWord links available for each web property.
+#' 
+#' @param token Token passed from shinygaGetToken()
+#' @param accountId AccountId of webproperty
+#' @param webPropertyId webPropertyId
+#' @param max Maximum number to fetch
+#' @return If token exists, a dataframe of filters for the account.
+#' @family fetch data functions
+#' @examples
+#' \dontrun{
+#' aw <- shinygaGetAdWords(123456)
+#' }
+shinygaGetAdWords = function(token, 
+                             accountId, 
+                             webPropertyId,
+                             start=1, 
+                             max=1000) { 
+  url <- paste0('https://www.googleapis.com/analytics/v3/management/accounts/', accountId, 
+               '/webproperties/', webPropertyId, 
+               '/entityAdWordsLinks',
+               '?access_token=', token,
+               '&start-index=', start,
+               '&max-results=', max)
+  
+
+  keep <- c('id',
+            'entity.webPropertyRef.id',
+            'entity.webPropertyRef.name',
+            'entity.webPropertyRef.accountId',
+            'adWordsAccounts', 
+            'name',
+            'profileIds'
+  )
+  
+  aw <- processManagementData(url, 
+                              keep)
+  
+  ## the adWordsAccounts is a little untidy
+  ## schema "analytics#adWordsAccount, 178-280-7367, TRUE"
+  ## and multiple adword entites per accountId
+  ## processing of untidy adWordsAccounts column
+  
+  # to keep name for merge later
+  names(aw$adWordsAccounts) <- aw$id
+  manytoOne <- Reduce(rbind, aw$adWordsAccounts)
+  #get name of adwords id for merge
+  cv <- unlist(lapply(aw$adWordsAccounts, nrow))
+  manytoOne$id <- rep(names(cv), cv)
+  
+  # merge with initial aw table
+  aw <- merge(aw, manytoOne )
+  
+  ## remove adWordsAccounts and kind column
+  aw <- aw[,setdiff(names(aw), c("adWordsAccounts", "kind"))]
+
+  return(aw)
+}
+
+#' Get GA customDimensions
+#' 
+#' Gets the Custom Dimensions available for each web property.
+#' 
+#' @param token Token passed from shinygaGetToken()
+#' @param accountId AccountId of webproperty
+#' @param webPropertyId webPropertyId
+#' @param max Maximum number to fetch
+#' @return If token exists, a dataframe of filters for the account.
+#' @family fetch data functions
+#' @examples
+#' \dontrun{
+#' dims <- shinygaGetCustomDimensions(123456)
+#' }
+shinygaGetCustomDimensions = function(token, 
+                             accountId, 
+                             webPropertyId,
+                             start=1, 
+                             max=1000) { 
+  url <- paste0('https://www.googleapis.com/analytics/v3/management/accounts/', accountId, 
+                '/webproperties/', webPropertyId, 
+                '/customDimensions',
+                '?access_token=', token,
+                '&start-index=', start,
+                '&max-results=', max)
+  
+  keep <- c('id',
+            'name',
+            'index',
+            'scope',
+            'active',
+            'created',
+            'updated',
+            'accountId',
+            'webPropertyId'
+  )
+  
+  aw <- processManagementData(url, 
+                              keep)
+  
+  ## to make it easier to rbind with customMetrics
+  if(nrow(aw) > 0){
+    aw$type <- "customDimension"
+  }
+  
+  return(aw)
+}
+
+#' Get GA customMetrics
+#' 
+#' Gets the Custom Metrics available for each web property.
+#' 
+#' @param token Token passed from shinygaGetToken()
+#' @param accountId AccountId of webproperty
+#' @param webPropertyId webPropertyId
+#' @param max Maximum number to fetch
+#' @return If token exists, a dataframe of filters for the account.
+#' @family fetch data functions
+#' @examples
+#' \dontrun{
+#' metrics <- shinygaGetCustomMetrics(123456)
+#' }
+shinygaGetCustomMetrics = function(token, 
+                                   accountId, 
+                                   webPropertyId,
+                                   start=1, 
+                                   max=1000) { 
+  url <- paste0('https://www.googleapis.com/analytics/v3/management/accounts/', accountId, 
+                '/webproperties/', webPropertyId, 
+                '/customMetrics',
+                '?access_token=', token,
+                '&start-index=', start,
+                '&max-results=', max)
+  
+  keep <- c('id',
+            'name',
+            'index',
+            'scope',
+            'active',
+            'type',
+            'created',
+            'updated',
+            'accountId',
+            'webPropertyId'
+  )
+  
+  aw <- processManagementData(url, 
+                              keep)
+  
+  return(aw)
+}
+
+#' Get GA customDataSources
+#' 
+#' Gets the Custom Metrics available for each web property.
+#' 
+#' @param token Token passed from shinygaGetToken()
+#' @param accountId AccountId of webproperty
+#' @param webPropertyId webPropertyId
+#' @param max Maximum number to fetch
+#' @return If token exists, a dataframe of filters for the account.
+#' @family fetch data functions
+#' @examples
+#' \dontrun{
+#' ds <- shinygaGetCustomDataSources(123456)
+#' }
+shinygaGetCustomDataSources = function(token, 
+                                   accountId, 
+                                   webPropertyId,
+                                   start=1, 
+                                   max=1000) { 
+  url <- paste0('https://www.googleapis.com/analytics/v3/management/accounts/', accountId, 
+                '/webproperties/', webPropertyId, 
+                '/customDataSources',
+                '?access_token=', token,
+                '&start-index=', start,
+                '&max-results=', max)
+  
+  keep <- c('id',
+            'name',
+            'description',
+            'uploadType',
+            'importBehavior',
+            'type',
+            'created',
+            'updated',
+            'accountId',
+            'webPropertyId'
+  )
+  
+  aw <- processManagementData(url, 
+                              keep)
+  
+  return(aw)
+}
+
 
 #' Get GA Goals
 #' 
@@ -308,13 +505,17 @@ processManagementData = function(url, keep) {
     stop('JSON fetch error: Bad request URL - 400. Fetched: ', url)
   }
   
-  if(is.data.frame(ga.json$items)){
-    df <- jsonlite::flatten(ga.json$items)
+  if(length(ga.json$items) > 0){
+    if(is.data.frame(ga.json$items)){
+      df <- jsonlite::flatten(ga.json$items)
+    } else {
+      stop("is.data.frame(ga.json$items) was false \n ",
+           ga.json$items)
+    }
   } else {
-    stop("is.data.frame(ga.json$items was false \n ",
-            ga.json$items)
+    df <- data.frame(matrix(ncol=length(keep), nrow=0))
+    names(df) <- keep
   }
-  
 
   if(all(keep %in% names(df))) {
     return(df[keep])    
@@ -322,6 +523,7 @@ processManagementData = function(url, keep) {
     warning("Requested columns to keep not found in return dataframe.
             \n Keep:", keep, 
             "\n Found: ", names(df), 
+            "\n Diffs:", setdiff(names(df), keep),
             "\n Returning all dataframe columns instead.")
     return(df)
   }

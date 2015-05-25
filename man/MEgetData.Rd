@@ -70,6 +70,9 @@ Refer to the dimensions and metric Google help file for more details.
 Other fetch data functions: \code{\link{getAndMergeGAAccounts}};
   \code{\link{processManagementData}};
   \code{\link{rollupGA}}; \code{\link{shinygaGetAccounts}};
+  \code{\link{shinygaGetAdWords}};
+  \code{\link{shinygaGetCustomDimensions}};
+  \code{\link{shinygaGetCustomMetrics}};
   \code{\link{shinygaGetFilters}};
   \code{\link{shinygaGetGoals}};
   \code{\link{shinygaGetProfiles}};
