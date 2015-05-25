@@ -32,11 +32,13 @@ Other fetch data functions: \code{\link{MEgetData}};
   \code{\link{processManagementData}};
   \code{\link{rollupGA}}; \code{\link{shinygaGetAccounts}};
   \code{\link{shinygaGetAdWords}};
+  \code{\link{shinygaGetCustomDataSources}};
   \code{\link{shinygaGetCustomDimensions}};
   \code{\link{shinygaGetCustomMetrics}};
   \code{\link{shinygaGetFilters}};
   \code{\link{shinygaGetGoals}};
   \code{\link{shinygaGetProfiles}};
-  \code{\link{shinygaGetSegments}}
+  \code{\link{shinygaGetSegments}};
+  \code{\link{shinygaGetUsers}}
 }
 

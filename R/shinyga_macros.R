@@ -216,7 +216,8 @@ metricSelect  <- function(inputId="metric_choice"){
 #' @param input Shiny input object.
 #' @param output Shiny output object.
 #' @param session Shiny session object.
-#' @param type Type of Google Authentication. c("analytics")
+#' @param type Type of Google Authentication. c("analytics").
+#' @param customScopes If not NULL, then a chacter vector of Google scopes to authenticate.
 #' 
 #' @return
 #' For Analytics:
@@ -278,13 +279,20 @@ doAuthMacro <- function(input, output, session,
                         securityCode,
                         client.id,
                         client.secret,
-                        type = "analytics"){
+                        type = "analytics",
+                        customScopes = NULL){
   
   types <- list(analytics   =  c("https://www.googleapis.com/auth/analytics",
                                  "https://www.googleapis.com/auth/analytics.readonly"), 
                 googlesheets = c("https://spreadsheets.google.com/feeds",
                                  "https://docs.google.com/feeds")
   )
+  
+  if(!is.null(customScopes)){
+    type = "custom"
+    types$custom <- customScopes
+    
+  }
   
   ## get the apps URL as default
   appURL <- reactive({
@@ -344,7 +352,7 @@ doAuthMacro <- function(input, output, session,
     token <- access_token$access_token
   })
   
-  if(type == "analytics"){
+  if(type == "analytics" | type == "custom"){
     
     GAProfileTable <- reactive({
       validate(
