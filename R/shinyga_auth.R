@@ -36,7 +36,7 @@
 #' }
 #' }
 createCode <- function(seed=NULL, num=20){
-  set.seed(seed)
+  if (!is.null(seed)) set.seed(seed)
   
   paste0(sample(c(1:9, LETTERS, letters), num, replace = T), collapse='')
 } 
