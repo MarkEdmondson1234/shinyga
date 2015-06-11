@@ -297,13 +297,23 @@ doAuthMacro <- function(input, output, session,
   ## get the apps URL as default
   appURL <- reactive({
     if(!is.null(session)){
+      pathname <- session$clientData$url_pathname
+      ## hack for shinyapps.io
+      if(session$clientData$url_hostname == "internal.shinyapps.io"){
+        split_hostname <- strsplit(pathname, "/")[[1]]
+        hostname <-  paste(split_hostname[2],"shinyapps.io", sep=".")
+        pathname <- paste0("/",split_hostname[3],"/")
+        
+      } else {
+        hostname <- session$clientData$url_hostname
+      }
       
       paste0(session$clientData$url_protocol,
              "//",
-             session$clientData$url_hostname,
-             ifelse(session$clientData$url_hostname == "127.0.0.1",
+             hostname,
+             ifelse(hostname == "127.0.0.1",
                     ":",
-                    session$clientData$url_pathname),
+                    pathname),
              session$clientData$url_port)
     } else {
       NULL
