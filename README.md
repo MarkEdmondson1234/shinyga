@@ -5,6 +5,7 @@ The functions in the package were used to help create these demo apps:
 
 * [GA Effect dashboard](http://markedmondson.me/how-i-made-ga-effect-creating-an-online-statistics-dashboard-using-reais)
 * [GA Rollup dashboard](https://mark.shinyapps.io/ga-rollup/)
+* [GA Meta](https://mark.shinyapps.io/ga-meta/)
 
 **Get in touch if you have any dashboards made with this package to get a link from here**
 
