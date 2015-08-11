@@ -1,3 +1,79 @@
+#' Substitute in a (nested) list
+#' 
+#' @param template A template named list
+#' @param replace_me A similar named list with different values to substitute
+#' 
+#' @return The template with the values substituted.
+#' 
+#' If replace_me has list names not in template, the value stays the same.
+substitute.list <- function(template, replace_me){
+
+  template[names(replace_me)] <- 
+    replace_me[intersect(names(template),names(replace_me))]
+  
+  return(template)
+  
+}
+
+amazing_function <- function(t, s){
+  classes <- lapply(t, class)
+  characters <- t[classes == "character"]
+}
+
+substitute_value_main <- function(template, replace_me){
+  
+  master_template <- list()
+  lapply(names(template), function(x) substitute_value(x, template, replace_me))
+  
+  return(master_template)
+}
+
+substitute_value <- function(template_entry_name, template, subs){
+  
+  entry <- template[[template_entry_name]]
+  message("Working on template name:", template_entry_name)
+  master_template <- get0("master_template")
+  # message("master_template: ", master_template)
+
+  if(class(entry) == "character"){
+    message("character class")
+    if(template_entry_name %in% names(subs)){
+      t <- subs[[intersect(template_entry_name, names(subs))]]
+      names(t) <- template_entry_name
+      
+      # master_template <<- c(master_template, t)
+      # message("master_template2", master_template)
+      message("Replace: ",template_entry_name, " with ", t)
+      message("str(t): ", str(t))
+    }
+    
+  } else if(class(entry) == "list"){
+      message("list class")
+      
+      t <- lapply(names(entry), function(x) substitute_value(x, entry, subs))
+      
+    } else {
+      t <- entry
+    }
+  
+  return(t)
+  
+}
+
+f_gen <- function(path_args){
+  
+  g <- function(path_arguments){
+    listOfArgs
+    internal_args <- list(...)
+    
+    message(names(listOfArgs))
+    message(names(internal_args))
+    lapply(listOfArgs, message)
+    lapply(internal_args, message)
+    
+  }
+} 
+
 #' Look up the country codes
 #' 
 #' @param code the ISO 3166-1 alpha-3 country code (as used in searchConsoleR)
@@ -47,7 +123,7 @@ lookupCountryCode <- function(country.code,
 #'          
 #' @keywords internal
 #' @family search analytics
-parseDimFilterGroup <- function(dfe){
+gsc.parseDimFilterGroup <- function(dfe){
   
   ## get lookup data
   country.codes <- ISO_3166_1$Alpha_3
@@ -132,7 +208,7 @@ is.error <- function(test_me){
 #' @return TRUE if valid, raises an error if not.
 #' 
 #' @keywords internal
-is.valid.category.platform <- function (category, platform, include.all=FALSE) {
+gsc.is.valid.category.platform <- function (category, platform, include.all=FALSE) {
   
   categories <- getOption("searchConsoleR.valid.categories")
   platforms  <- getOption("searchConsoleR.valid.platforms")

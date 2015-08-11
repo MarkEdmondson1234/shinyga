@@ -2,12 +2,12 @@
 #' 
 #' This function generates other functions for use with Google APIs
 #' 
-#' @param baseURI The stem of the API call
-#' @param http_header Type of http request
-#' @param path_args A named list with name=folder in request URI, value=the function variable
-#' @param pars_args A named list with name=parameter in request URI, value=the function variable
-#' @param the_body If a POST or PUT request needs a body put it here
-#' @param data_parse_function A function that takes a request response and parses it as you need it
+#' @param baseURI The stem of the API call.
+#' @param http_header Type of http request.
+#' @param path_args A named list with name=folder in request URI, value=the function variable.
+#' @param pars_args A named list with name=parameter in request URI, value=the function variable.
+#' @param the_body If a POST or PUT request needs a body put it here.
+#' @param data_parse_function A function that takes a request response, parses it and returns the data you need.
 #' 
 #' @returns A function that can fetch the Google API data you specify
 
@@ -19,15 +19,22 @@ googleAuth_fetch_generator <- function(baseURI,
                                        data_parse_function=NULL){
   
   http_header <- match.arg(http_header)
+  if(substr(baseURI,nchar(baseURI),nchar(baseURI))!="/") baseURI <- paste0(baseURI, "/")
   
   path <- NULL
   pars <- NULL
   
-  if(!is.null(path_args)) path <- 
+  if(!is.null(path_args)) {
+    path <- 
       paste(names(path_args), path_args, sep="/", collapse="/" )
+    
+  }  
   
-  if(!is.null(pars_args)) pars <- 
+  if(!is.null(pars_args)){
+    pars <- 
       paste(names(pars_args), pars_args, sep='=', collapse='&')
+    
+  } 
   
   func <- function(path_arguments=NULL, 
                    pars_arguments=NULL, 
@@ -35,15 +42,23 @@ googleAuth_fetch_generator <- function(baseURI,
                    the_body=NULL){
     
     if(checkTokenAPI(shiny_access_token)){
+      
+      ## for path_arguments present, change path_args
       if(!is.null(path_arguments)){
-        path <- paste(names(path_args), path_arguments, sep="/", collapse="/" )        
+        path_args <- substitute.list(path_args, path_arguments)
+        path <- paste(names(path_args), path_args, sep="/", collapse="/" )        
       }
       
+      ## for pars_arguments present, change pars_args
       if(!is.null(pars_arguments)){
-        pars <- paste("?", names(pars_args), pars_arguments, sep='=', collapse='&')        
+        pars_args <- substitute.list(pars_args, pars_arguments)
+        pars <- paste(names(pars_args), pars_args, sep='=', collapse='&')
+        pars <- paste0("?", pars)
       }
 
       req_url <- paste0(baseURI, path, pars)
+      
+      message(req_url)
       
       req <- doHttrRequest(req_url, 
                            shiny_access_token, 

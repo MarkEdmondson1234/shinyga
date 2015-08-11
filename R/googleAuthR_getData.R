@@ -111,7 +111,7 @@ search_analytics <- function(siteURL,
   searchType      <- match.arg(searchType)
   aggregationType <- match.arg(aggregationType)
   
-  siteURL <- check.Url(siteURL, reserved=T)
+  siteURL <- check.Url(siteURL)
   
   startDate <- as.character(startDate)
   endDate   <- as.character(endDate)
@@ -207,12 +207,59 @@ search_analytics <- function(siteURL,
     stop("Invalid Token")
     
   }
-  }
+}
+
+search_analytics <- function(siteURL, 
+                             startDate, endDate, 
+                             dimensions = NULL, 
+                             searchType = c("web","video","image"),
+                             dimensionFilterExp = NULL,
+                             aggregationType = c("auto","byPage","byProperty"),
+                             rowLimit = 1000,
+                             prettyNames = TRUE,
+                             shiny_access_token=NULL){
+  
+  ## a list of filter expressions 
+  ## expects dimensionFilterExp like c("device==TABLET", "country~~GBR")
+  parsedDimFilterGroup <- lapply(dimensionFilterExp, gsc.parseDimFilterGroup)
+  
+  body <- list(
+    startDate = startDate,
+    endDate = endDate,
+    dimensions = as.list(dimensions),  
+    searchType = searchType,
+    dimensionFilterGroups = list(
+      list( ## you don't want more than one of these until different groupType available
+        groupType = "and", ##only one available for now
+        filters = parsedDimFilterGroup
+      )
+    ),
+    aggregationType = aggregationType,
+    rowLimit = rowLimit
+  )
+  
+  search_analytics_g <- googleAuth_fetch_generator("https://www.googleapis.com/webmasters/v3/",
+                                                   "POST")
+  result <- search_analytics_g(the_body = body)
+}
 
 
-list_websites_g <- googleAuth_fetch_generator("https://www.googleapis.com/webmasters/v3/sites",
+
+list_websites_g <- googleAuth_fetch_generator("https://www.googleapis.com/webmasters/v3/",
                                               "GET",
+                                              path_args = list(sites = ""),
                                               data_parse_function = function(x) x$siteEntry)
+list_websites_g()
+
+list_sitemaps_g <- googleAuth_fetch_generator("https://www.googleapis.com/webmasters/v3/",
+                                              "GET",
+                                              path_args = list(sites = "siteURL",
+                                                            sitemaps = ""),
+                                              data_parse_function = function(x){
+                                                list(sitemap = x$sitemap[, setdiff(names(x$sitemap), "contents")],
+                                                     contents = x$sitemap$contents[[1]])
+                                              })
+list_sitemaps_g(path_arguments = list(sites = check.Url("http://copenhagenish.me")))
 
 
 #' Retrieves dataframe of websites user has in Search Console
@@ -340,6 +387,7 @@ list_sitemaps <- function(siteURL, shiny_access_token=NULL) {
   }
   
 }
+
 
 #' Submit a sitemap.
 #' 
