@@ -143,81 +143,6 @@ search_analytics <- function(siteURL,
     stop("rowLimit must be 5000 or lower. Got this: ", rowLimit)
   }
   
-  ## require pre-existing token, to avoid recursion
-  if(checkTokenAPI(shiny_access_token)) {
-    
-    ## docs here
-    ## https://developers.google.com/webmaster-tools/v3/searchanalytics/query
-    req_url <- paste0("https://www.googleapis.com/webmasters/v3/sites/", 
-                      siteURL,
-                      "/searchAnalytics/query")
-    
-    ## a list of filter expressions 
-    ## expects dimensionFilterExp like c("device==TABLET", "country~~GBR")
-    parsedDimFilterGroup <- lapply(dimensionFilterExp, parseDimFilterGroup)
-    
-    body <- list(
-      startDate = startDate,
-      endDate = endDate,
-      dimensions = as.list(dimensions),  
-      searchType = searchType,
-      dimensionFilterGroups = list(
-        list( ## you don't want more than one of these until different groupType available
-          groupType = "and", ##only one available for now
-          filters = parsedDimFilterGroup
-        )
-      ),
-      aggregationType = aggregationType,
-      rowLimit = rowLimit
-    )
-    
-    req <- searchconsole_POST(req_url, shiny_access_token, the_body = body)
-    
-    the_data <- req$content$rows
-    
-    # a bit of jiggery pokery (data processing)
-    dimensionCols <- data.frame(Reduce(rbind, 
-                                       lapply(the_data$keys, function(x) 
-                                         rbind(x))), 
-                                row.names=NULL, stringsAsFactors = F)
-    
-    ## if no rows, get out of here.
-    if(!NROW(dimensionCols) > 0) return(NULL)
-    
-    names(dimensionCols ) <- dimensions
-    dimensionCols <- lapply(dimensionCols, unname)
-    
-    if('date' %in% names(dimensionCols)){
-      dimensionCols$date <- as.Date(dimensionCols$date)
-    }
-    
-    if(all('country' %in% names(dimensionCols), prettyNames)){
-      dimensionCols$countryName <- lookupCountryCode(dimensionCols$country)
-    }
-    
-    metricCols <- the_data[setdiff(names(the_data), 'keys')]
-    
-    the_df <- data.frame(dimensionCols , metricCols, stringsAsFactors = F, row.names = NULL)
-    attr(the_df, "aggregationType") <- req$content$responseAggregationType
-    
-    the_df
-    
-  } else {
-    
-    stop("Invalid Token")
-    
-  }
-}
-
-search_analytics <- function(siteURL, 
-                             startDate, endDate, 
-                             dimensions = NULL, 
-                             searchType = c("web","video","image"),
-                             dimensionFilterExp = NULL,
-                             aggregationType = c("auto","byPage","byProperty"),
-                             rowLimit = 1000,
-                             prettyNames = TRUE,
-                             shiny_access_token=NULL){
   
   ## a list of filter expressions 
   ## expects dimensionFilterExp like c("device==TABLET", "country~~GBR")
@@ -239,17 +164,49 @@ search_analytics <- function(siteURL,
   )
   
   search_analytics_g <- googleAuth_fetch_generator("https://www.googleapis.com/webmasters/v3/",
-                                                   "POST")
-  result <- search_analytics_g(the_body = body)
+                                                   "POST",
+                                                   path_args = list(sites = "siteURL",
+                                                                    searchAnalytics = "query"),
+                                                   ,
+                                                   data_parse_function = function(x) parse_search_analytics(x, dimensions, prettyNames))
+  result <- search_analytics_g(path_arguments = list(sites = check.Url(siteURL)),
+                               the_body = body)
+}
+
+parse_search_analytics <- function(x, dimensions, prettyNames){
+  # return(x)
+  the_data <- x$rows
+  
+  # a bit of jiggery pokery (data processing)
+  dimensionCols <- data.frame(Reduce(rbind, 
+                                     lapply(the_data$keys, function(x) 
+                                       rbind(x))), 
+                              row.names=NULL, stringsAsFactors = F)
+  
+  ## if no rows, get out of here.
+  if(!NROW(dimensionCols) > 0) return(the_data)
+  
+  names(dimensionCols ) <- dimensions
+  dimensionCols <- lapply(dimensionCols, unname)
+  
+  if('date' %in% names(dimensionCols)){
+    dimensionCols$date <- as.Date(dimensionCols$date)
+  }
+  
+  if(all('country' %in% names(dimensionCols), prettyNames)){
+    dimensionCols$countryName <- lookupCountryCode(dimensionCols$country)
+  }
+  
+  metricCols <- the_data[setdiff(names(the_data), 'keys')]
+  
+  the_df <- data.frame(dimensionCols , metricCols, stringsAsFactors = F, row.names = NULL)
+  attr(the_df, "aggregationType") <- x$responseAggregationType
+  
+  the_df
 }
 
 
 
-list_websites_g <- googleAuth_fetch_generator("https://www.googleapis.com/webmasters/v3/",
-                                              "GET",
-                                              path_args = list(sites = ""),
-                                              data_parse_function = function(x) x$siteEntry)
-list_websites_g()
 
 list_sitemaps_g <- googleAuth_fetch_generator("https://www.googleapis.com/webmasters/v3/",
                                               "GET",
@@ -259,7 +216,7 @@ list_sitemaps_g <- googleAuth_fetch_generator("https://www.googleapis.com/webmas
                                                 list(sitemap = x$sitemap[, setdiff(names(x$sitemap), "contents")],
                                                      contents = x$sitemap$contents[[1]])
                                               })
-list_sitemaps_g(path_arguments = list(sites = check.Url("http://copenhagenish.me")))
+# list_sitemaps_g(path_arguments = list(sites = check.Url("http://copenhagenish.me")))
 
 
 #' Retrieves dataframe of websites user has in Search Console
@@ -270,25 +227,10 @@ list_sitemaps_g(path_arguments = list(sites = check.Url("http://copenhagenish.me
 #'
 #' @export
 #' @family search console website functions
-list_websites <- function(shiny_access_token=NULL) {
-  
-  ## require pre-existing token, to avoid recursion
-  if(checkTokenAPI(shiny_access_token)) {
-    ## docs here
-    ## https://developers.google.com/webmaster-tools/v3/sites/list
-    req <- 
-      searchconsole_GET("https://www.googleapis.com/webmasters/v3/sites", 
-                        shiny_access_token)
-    
-    req$content$siteEntry
-    
-  } else {
-    
-    stop("Invalid Token")
-    
-  }
-  
-}
+list_websites <- googleAuth_fetch_generator("https://www.googleapis.com/webmasters/v3/",
+                                              "GET",
+                                              path_args = list(sites = ""),
+                                              data_parse_function = function(x) x$siteEntry)
 
 #' Adds website to Search Console
 #' 

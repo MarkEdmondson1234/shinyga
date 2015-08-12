@@ -15,17 +15,17 @@ substitute.list <- function(template, replace_me){
   
 }
 
-amazing_function <- function(t, s){
-  classes <- lapply(t, class)
-  characters <- t[classes == "character"]
-}
 
-substitute_value_main <- function(template, replace_me){
+
+amazing_function <- function(t, s){
   
-  master_template <- list()
-  lapply(names(template), function(x) substitute_value(x, template, replace_me))
+  t_ul <- unlist(as.relistable(t))
   
-  return(master_template)
+  last_character <- Reduce(c, lapply(strsplit(names(t_ul), ".", fixed=T), function(x) x[length(x)]))
+  
+  changeme <- t_ul
+  names(changeme) <- last_character
+
 }
 
 substitute_value <- function(template_entry_name, template, subs){

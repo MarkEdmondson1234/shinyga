@@ -39,7 +39,8 @@ googleAuth_fetch_generator <- function(baseURI,
   func <- function(path_arguments=NULL, 
                    pars_arguments=NULL, 
                    shiny_access_token = NULL, 
-                   the_body=NULL){
+                   the_body=NULL,
+                   ...){
     
     if(checkTokenAPI(shiny_access_token)){
       
@@ -66,7 +67,7 @@ googleAuth_fetch_generator <- function(baseURI,
                            the_body)
       
       if(!is.null(data_parse_function)){
-        req <- data_parse_function(req$content)
+        req <- data_parse_function(req$content, ...)
       }
       
     } else {
