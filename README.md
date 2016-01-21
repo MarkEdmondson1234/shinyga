@@ -9,6 +9,13 @@ The functions in the package were used to help create these demo apps:
 
 **Get in touch if you have any dashboards made with this package to get a link from here**
 
+# !Deprecated!
+
+I would now recommend that for Shiny apps using Google Analytics to use [`googleAnalyticsR`](https://github.com/MarkEdmondson1234/googleAnalyticsR_public) as it has more features and is compatible with other Google APIs written with [`googleAuthR`](https://github.com/MarkEdmondson1234/googleAuthR).
+
+No new features will be added to `shinyga()`
+
+
 ## Change history
 
 ### Dev version
